@@ -1,0 +1,18 @@
+.win-rate-chart{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+.win-rate-circle{
+    fill: none;
+    stroke: #f82b51;
+}
+
+.win-rate-fill{
+    fill:none;
+    stroke: #3776fc;
+
+}

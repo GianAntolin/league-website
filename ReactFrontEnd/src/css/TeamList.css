@@ -1,0 +1,27 @@
+.participant{
+    display: flex;
+    margin: 2px;
+    align-items: center;
+    height: 15px;
+    width: 100%;
+}
+.participantchampionIcon{
+    display: flex;
+    height: 17px;
+    width: 17px;
+}
+
+.participant-Name{
+    font-size: 11px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space:nowrap;
+    margin-left: 2px;
+    max-width: 70%;
+    color:white;
+}
+
+a{
+    text-decoration: none;
+    color:var(--gray);
+}

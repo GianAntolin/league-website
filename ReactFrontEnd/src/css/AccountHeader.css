@@ -1,0 +1,51 @@
+.account-header{
+    display: flex;
+    height: 100%;
+    width: 100%;
+    background-position: left;
+    background-size: 1062px 100%;
+    background-repeat: no-repeat;   
+}
+
+
+.account-header-icon-container{
+    display: flex;
+    width: 50%;
+    height: 50%;
+    align-items: flex-end;
+}
+
+.account-header-icon-name-tag{
+    display: flex;
+    flex-direction: row;
+    height: 90px;
+    width: 98%;
+    gap: 2%;    
+    align-items: flex-end;
+}
+
+.account-header-icon-level{
+    display: flex;
+    height: 100%;
+    width: 85px;
+}
+
+.name-tag{
+    display:flex;
+    justify-content: center;
+    color: white;
+    text-align: left;
+    font-family: Inter,sans-serif;
+    font-weight: 900;
+    
+}
+
+
+@media (max-width: 975px){
+    .account-header-icon-container{
+        margin-left: max(0px, calc((90vw - 750px)/2));
+
+    }
+}
+
+

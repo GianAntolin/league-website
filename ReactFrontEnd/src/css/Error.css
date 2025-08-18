@@ -1,0 +1,27 @@
+.error-content-top{
+    display: flex;
+    flex-direction: column;
+    height: 50%;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-family: "Bodoni Moda", serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 48px;
+    text-align: center;
+}   
+
+.sub-error{
+    display: flex;
+    font-size: 18px;
+    justify-content: center;
+    align-items: center;
+}
+
+.sub-error-message{
+    font-style: normal;
+    font-size: 18px;
+    font-weight: 400;
+
+}

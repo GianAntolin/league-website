@@ -1,0 +1,134 @@
+.search-bar-top{
+  flex: 0 0 650px;
+  height: 90%;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.search-bar-sections{
+  display: flex;
+  height: 36px;
+  width: 75%;
+  align-items: center;
+  justify-content: center;
+  background-color: #f6f6f6;
+  position: relative;
+  border-radius: .50rem;
+}
+
+.search-bar-section1{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 10%;
+  border-radius: .50rem 0 0 .50rem;
+}
+
+.search-bar-section1 button{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: .50rem 0 0 .50rem;
+}
+
+.search-bar-section1 button:hover{
+  background-color: rgb(216, 232, 249);
+}
+
+.search-bar-drop-down{
+  position: absolute;
+  top: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 10%;
+  z-index: 1;
+  background-color: #FFFFFF;
+  border-radius: .50rem;
+  overflow: hidden;
+  min-width: 48px;
+
+}
+
+.form-search{
+  width: 90%;
+  display:flex;
+  align-items: center;
+  justify-content: left;
+  padding: 0px;
+  height: 100%;
+  border-radius: .5rem;
+}
+
+.search{
+    display: flex;
+    padding: 0px;
+    width: 100%;
+    background-color: #f6f6f6;
+    height: 65%;
+    justify-content: center;
+    align-items: center;
+    border-radius: .5rem;
+  }
+
+
+.search-bar{
+    font-size: 14px;
+    display: flex;
+    color: #333333;
+    outline: none;
+    border: none;
+    background-color: transparent;
+    margin-left: 5%;
+    margin-right:5%;
+    align-items: left;
+    width: 80%;
+
+  }
+  
+  .search-bar::placeholder{
+    color: rgba(0, 0, 0, 0.5);
+  }
+  .search-icon{
+    color: rgba(0, 0, 0, 0.5);
+    display: flex;
+  }
+
+  .button-search{
+    background-color: transparent;
+    display: flex;
+    justify-content: right;
+    border: none;
+    padding: 0px;
+    width: 20%;
+  }
+  
+
+    
+    
+  @media (max-width: 800px) {
+    
+    .search-bar-top{
+      flex: 1 1 0%;
+      width: 100%;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .search-bar-sections{
+      height: 50%;
+      width: 90%;
+      max-width: 487.5px;
+    }
+    
+}
+

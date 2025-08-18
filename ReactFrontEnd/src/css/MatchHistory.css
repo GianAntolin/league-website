@@ -1,0 +1,208 @@
+.match{
+    width: 100%;
+    min-width: 600px;
+    max-width: 750px;
+  
+
+}
+
+.match-history-container{
+    display:flex;
+    flex-direction: column;
+    width: 100%;
+
+}
+.match-history-header{
+    display: flex;
+    height: 50px;
+    line-height: 50px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 900;
+    background-color: var(--profile-card-color);
+    font-size: 16px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #424254;
+    
+}
+
+
+.pending-match-history{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2%;
+    width: 100%;
+    height: 48%;
+}
+
+
+.show-more-button{
+    display: flex;
+    background-color: var(--profile-card-color);
+    color: white;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #424254;
+    text-align: center;
+    justify-content: center; 
+    width: 100%;
+    border-radius: .25rem;
+    margin-top: 6px;
+
+    
+
+}
+
+.match-history-slash{
+    display: flex;
+    justify-content: center;
+    width: 12px;
+    color: var(--gray);
+}
+
+
+.match-history-stats{
+    justify-content: center;
+    background-color: #0f0f2f;
+    width: 100%;
+    min-height:100px;
+    border-style: solid;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 0px;
+    border-bottom-width: 0px;
+    border-color: #424254;
+}
+
+
+.match-history-stats-content{
+    display: flex;
+    flex-wrap: wrap;
+    padding-top:5px;
+    padding-bottom: 5px;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.match-history-section-1{
+    width: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: 900;
+
+}
+
+
+.match-history-section-2{
+    width: 95px;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+
+}
+
+.match-history-section-3{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    flex: 1 1 0%;
+    max-width: 400px;
+}
+
+.match-history-section1-wins{
+    font-size: 12px;
+    font-weight: 700;
+    color: white;
+}
+
+.match-history-section1-WR{
+    font-size: 12px;
+    color: #3776fc;
+    font-weight: 700;
+}
+
+.KDA{
+    font-size: 12px;
+    color: white;
+}
+
+
+.match-history-section2-kda-letters{
+    font-size: 12px;
+    color: gray;
+    margin-left:5px;
+    font-weight: bolder;
+}
+
+.match-list{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--profile-card-color);
+    width:100%;
+    height: 100%;
+}
+
+@media (max-width: 667px){
+    .match{
+        min-width: unset;
+    }
+}
+
+@media (max-width: 616px){
+    .match-history-section-1{
+        width: unset;
+        flex-direction: row;
+        gap: 12px;    
+    }
+    .match-history-section1-wins{
+        font-size: 14px;
+    }
+
+    .match-history-section1-WR{
+        font-size: 14px;
+    }
+
+    .match-history-section-2{
+        width: unset;
+        flex-direction: row;
+        gap: 12px;    
+        padding-left: 12px;
+    }
+
+    .match-history-section2-KDA{
+        font-size: 14px;
+    }
+
+    .match-history-section2-kda-letters{
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 516px){
+    .match-history-section-3{
+        .recent-games-champions{
+            /* flex-direction: column; */
+            flex-wrap: wrap;
+            gap: 12px;
+            padding-left: 12px;
+            padding-right: 12px;
+        }
+        max-width: unset;
+    }
+    .match-history-stats-content{
+        flex-direction: column;
+        gap: 6px;
+    }
+}

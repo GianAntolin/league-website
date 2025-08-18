@@ -1,0 +1,84 @@
+.leaderboards-profile-card-header-top{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+
+    color: white;
+    font-size: 14px;
+    background-color: var(--profile-card-color);
+    border-radius: .50rem .50rem 0 0;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    border-style: solid;
+    border-width: 0;
+    border-color: black;
+    border-bottom-width: 1px;
+}
+
+.leaderboards-profile-card-header-rank{
+    display: flex;
+    width: 10%;
+    justify-content: center;
+    align-items: center;
+}
+
+.leaderboards-profile-card-header-name{
+    display: flex;
+    align-items: center;
+    width: 40%;
+}
+
+.leaderboards-profile-card-header-tier{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 15%;
+    margin-right: 2%;
+}
+
+.leaderboards-profile-card-header-lp{
+    width: 10%;
+    margin-right: 2%;
+    display: flex;
+    align-items: center;
+    justify-content: center ;
+    color: white;
+}
+
+.leaderboards-profile-card-header-wr{
+    display: flex;
+    width: 21%;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width:600px){
+    .leaderboards-profile-card-header-top{
+        border-radius: 0;
+    }
+}
+
+@media (max-width: 320px){
+    .leaderboards-profile-card-header-rank{
+        min-width: 32px;
+    }
+    .leaderboards-profile-card-header-name{
+        width: 36%;
+        min-width: 64px;
+    }
+
+    .leaderboards-profile-card-header-tier{
+        min-width: 32px;
+        margin-right: 0%;
+
+    }
+    .leaderboards-profile-card-header-lp{
+        min-width: 32px;
+        margin-right: 0%;
+    }
+    .leaderboards-profile-card-header-wr{
+        margin-left: 5%;
+        min-width: 64px;  
+        width: 25%;  
+    }   
+}

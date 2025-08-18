@@ -1,0 +1,26 @@
+.KDA-totals-container{
+    display: flex;
+    line-height: 17px;
+}
+
+.k{
+    font-size: 14px;
+    color: #3776fc;
+}
+
+.d{
+    font-size: 14px;
+    color: #f82b51;
+}
+
+.a{
+    font-size: 14px;
+    color: #ff9b00;
+}
+
+.slash{
+    font-size: 14px;
+    color: var(--gray);
+    margin-left:2.5px;
+    margin-right:2.5px;
+}

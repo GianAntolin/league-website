@@ -1,0 +1,31 @@
+.champion-stats-overview{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.champion-stats-img{
+    width: 35px;
+    height: 40px;
+    margin-right: 6px;
+}
+
+.champion-stats{
+    width: 85px;
+    display: flex;
+
+    flex-direction: column;
+    color: white;
+    font-size: 12px;
+}
+
+.champion-stats-kda{
+    color: white;
+    font-weight: bolder;
+}
+
+.champion-stats-kda-letters{
+    color: gray;
+    margin-left:5px;
+}

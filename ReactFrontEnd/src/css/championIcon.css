@@ -1,0 +1,44 @@
+.champion-level-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.championIcon-level{
+    display: flex;
+    position: relative;
+
+}
+
+.championIcon{
+    display: flex;
+
+}
+
+.champ-level-box{
+    background-color: rgb(33, 30, 30);
+    position:relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 15px;
+    height: 15px;
+    bottom:15px;
+    right:17px;
+}
+
+.champ-level{
+    display:flex;
+    font-family: Inter,sans-serif;
+
+
+    color: white;
+    font-size: 12px;
+
+
+    background-color: transparent;
+    
+
+}

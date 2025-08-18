@@ -1,0 +1,61 @@
+.match-overview-header{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    font-size: 14px;
+    font-family: Inter,sans-serif;
+    justify-content: center;
+    margin-top:1.25%;
+    margin-bottom:1.25%;
+
+
+}
+
+.match-overview-header-victory{
+    display: flex;
+    margin-left: 1.5%;
+    text-align: center;
+    width: 26%;
+    margin-right: 3%;
+    justify-content: Center;
+}
+
+.match-overview-outcome{
+    font-weight: 900;
+}
+
+.match-overview-header-KDA{
+    width: 11.5%;
+    text-align: center;
+    color: white;
+
+}
+
+.match-overview-header-DMG{
+    width: 11.5%;
+    text-align: center;
+    color: white;
+
+}
+
+.match-overview-header-CS{
+    width: 9%;
+    text-align: center;
+    color: white;
+
+}
+
+.match-overview-header-WARDS{
+    width: 9%;
+    text-align: center;
+    color: white;
+
+}   
+.match-overview-header-ITEMS{
+    width: 30%;
+    text-align: center;
+    color: white;
+
+}
+

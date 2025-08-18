@@ -1,0 +1,60 @@
+.profile-icon-level-overview{
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+.profile-icon-border{
+    display: flex;
+    flex-direction: column;
+    border-width: 2px;
+    border-color: var(--gold);
+    border-style: solid;
+    position: relative;
+    height: 90%;
+    width: 100%;  
+}
+
+.profile-icon{
+    display:flex;
+    background-color: var(--profile-card-color);
+    width: 100%;
+    height: 100%;
+    border-style: solid;
+    border-color: rgb(23 23 46);
+}
+
+.profile-icon-level{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+}
+
+.level{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Inter,sans-serif;
+    color: white;
+    font-size: 11px;
+    text-align: center;
+    position: absolute;
+    z-index: 1;
+    width: 50%;
+    border-radius: .25rem;
+    border-width: 2px;
+    border-color: var(--gold);
+    border-style: solid;
+
+    background-color: var(--background-color);
+}
+
+@media (max-width: 1024px) {
+    .level{
+        height: 20px;
+        min-width: 26px;
+    }
+}
+

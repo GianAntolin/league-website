@@ -1,0 +1,27 @@
+.home-content-top{
+    display: flex;
+    flex-direction: column;
+    height: 50%;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-family: "Bodoni Moda", serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 48px;
+}   
+
+.sub-welcome{
+    display: flex;
+    font-size: 18px;
+    justify-content: center;
+    align-items: center;
+}
+
+.sub-welcome-message{
+    font-style: normal;
+    font-size: 18px;
+    font-weight: 400;
+    text-align: center;
+
+}

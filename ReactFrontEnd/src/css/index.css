@@ -1,0 +1,29 @@
+:root{
+    /* --profile-card-color: #31313C; */
+    --profile-card-color: #191937;
+
+    /* --background-color: #1C1C1F; */
+    --background-color: #070720;
+    --gold: rgb(205, 136, 55);
+    --victory: #28344E;
+    --defeat: #59343b;
+    --gray: rgba(184, 198, 219,1);
+  
+    font-family: Inter,sans-serif;
+    height:100%;
+    width:100%;
+
+  
+  }
+  
+
+html, body, #root, #root>div{
+    height:100%;
+    width: 100%;
+    min-width: 240px;
+    margin:0;
+    padding:0;
+    background-color: var(--background-color);
+}
+
+

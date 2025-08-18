@@ -1,0 +1,13 @@
+.win-rate-bar{
+    overflow: hidden;
+    border-radius: .50rem;
+    font-size: 12px;
+    height: 85%;
+    width: 85%;
+}
+
+.win-rate-bar-fill{
+    height: 100%;
+}
+
+

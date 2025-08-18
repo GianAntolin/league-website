@@ -1,0 +1,25 @@
+.match-overview-top{
+    width: 100%;
+}
+
+.match-overview{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: var(--profile-card-color);
+    margin-top:6px;
+    margin-bottom: 6px;
+    border-radius: .50rem;
+    width: 100%;
+}
+
+.overview-top{
+    display: flex;
+    flex-direction: column;    
+}
+
+
+.overview-team{
+    display: flex;
+    flex-direction: column;
+}
