@@ -87,7 +87,13 @@ baseMatchURL = "/lol/match/v5/matches/" #region
 baseChallengerQueue = '/lol/league/v4/challengerleagues/by-queue/' #platform
 baseLeagueRank = '/lol/league/v4/entries/by-puuid/' #platform
 #Base URL for data and assets
-ddragonBaseURL = "https://ddragon.leagueoflegends.com/cdn/15.16.1/"
+
+    #Make an API call to find the latest version of DDragon
+def getLatestDDragonversion():
+    response = requests.get("https://ddragon.leagueoflegends.com/api/versions.json")
+    DdragonVersions = response.json()
+    return "https://ddragon.leagueoflegends.com/cdn/" + DdragonVersions[0] + "/"
+ddragonBaseURL = getLatestDDragonversion()
 
 
 challengerRankedSoloURL = "https://na1.api.riotgames.com/lol/league/v4/challengerleagues/by-queue/RANKED_SOLO_5x5" #platform
@@ -578,5 +584,3 @@ def getLeaderboardsProfile(region, data, start, end, queueType):
 
 
             
-
-
