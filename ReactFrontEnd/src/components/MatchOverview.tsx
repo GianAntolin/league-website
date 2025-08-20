@@ -4,8 +4,8 @@ import MatchOverviewHeader from './MatchOverviewHeader';
 import MatchOverviewProfile from './MatchOverviewProfile'
 
 interface MatchOverviewProps{
-    data: MatchData,
-    region: string
+    data: MatchData;
+    region: string;
 }
 
 /**

@@ -10,87 +10,87 @@ import WinRateChart from "./WinRateChart";
 import RecentGames from "./RecentGames";
 
 export interface ChampionItems{
-  item0: string, 
-  item1: string, 
-  item2: string,
-  item3: string,  
-  item4: string, 
-  item5: string, 
-  item6: string, 
+  item0: string; 
+  item1: string; 
+  item2: string;
+  item3: string;  
+  item4: string; 
+  item5: string; 
+  item6: string; 
 
 }
 
 export interface Participant{
-  'PUUID' : string,
-  'participantName': string,
-  'particpantTag': string,
+  'PUUID' : string;
+  'participantName': string;
+  'particpantTag': string;
 
-  'summonerSpell1': string,
-  'summonerSpell2': string,
+  'summonerSpell1': string;
+  'summonerSpell2': string;
 
 
-  'kills':  number,
-  'deaths': number,
-  'assists': number,
-  'kda': number,
-  'cs': number,
+  'kills':  number;
+  'deaths': number;
+  'assists': number;
+  'kda': number;
+  'cs': number;
 
-  'totalWards': number,
-  'visionWards': number,
-  'wardsKilled': number,
-  'visionScore': number
+  'totalWards': number;
+  'visionWards': number;
+  'wardsKilled': number;
+  'visionScore': number;
 
-  'totalDmgToChamps': number,
+  'totalDmgToChamps': number;
   
-  'champLevel': number,
-  'championPic': string,
-  'championPicSplash' : string
-  'items': ChampionItems
-  'win': boolean
+  'champLevel': number;
+  'championPic': string;
+  'championPicSplash' : string;
+  'items': ChampionItems;
+  'win': boolean;
 }
 
 export interface MatchData{
-  matchID: string,
-  gameDurationM: number,
-  gameDurationS: number,
-  gameEndTimestamp: string,
-  gameEndTimestampUnix: number,
-  mainParticipant: string,
-  win: boolean,
-  queueType: string,
-  highestDmg: number,
+  matchID: string;
+  gameDurationM: number;
+  gameDurationS: number;
+  gameEndTimestamp: string;
+  gameEndTimestampUnix: number;
+  mainParticipant: string;
+  win: boolean;
+  queueType: string;
+  highestDmg: number;
   participants: {
-      '0': Participant,
-      '1': Participant,
-      '2': Participant,
-      '3': Participant,
-      '4': Participant,
-      '5': Participant,
-      '6': Participant,
-      '7': Participant,
-      '8': Participant,
-      '9': Participant
-  }
+      '0': Participant;
+      '1': Participant;
+      '2': Participant;
+      '3': Participant;
+      '4': Participant;
+      '5': Participant;
+      '6': Participant;
+      '7': Participant;
+      '8': Participant;
+      '9': Participant;
+  };
 }
 
 export interface Matches{
     // matches: MatchData | null
-    [key: string]: MatchData
+    [key: string]: MatchData;
 }
 
 export interface MatchHistoryData{
-    matches: Matches,
-    totalKills: number,
-    totalAssists: number,
-    totalDeaths: number,
-    totalWins: number,
-    totalGames: number,
-    empty: boolean
+    matches: Matches;
+    totalKills: number;
+    totalAssists: number;
+    totalDeaths: number;
+    totalWins: number;
+    totalGames: number;
+    empty: boolean;
 }
 
 interface MatchHistoryProps{
-  id: string,
-  region: string
+  id: string;
+  region: string;
 }
 
 /**

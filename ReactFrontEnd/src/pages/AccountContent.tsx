@@ -14,39 +14,39 @@ import BackgroundImgContextProvider from '../context/BackgroundImgContext.tsx';
 
 export interface SummonerData{
 
-  PUUID: string,
-  name: string,
-  tag: string,
-  region: string,
-  level: number,
-  icon: string,
-  rankSoloTier: string,
-  rankSoloTierImg: string,
-  rankSoloRank: string,
-  rankSoloLP: number,
-  rankSoloWins: number,
-  rankSoloLosses: number,
-  rankFlexTier: string,
-  rankFlexTierImg: string,
-  rankFlexRank: string,
-  rankFlexLP: number,
-  rankFlexWins: number,
-  rankFlexLosses: number
+  PUUID: string;
+  name: string;
+  tag: string;
+  region: string;
+  level: number;
+  icon: string;
+  rankSoloTier: string;
+  rankSoloTierImg: string;
+  rankSoloRank: string;
+  rankSoloLP: number;
+  rankSoloWins: number;
+  rankSoloLosses: number;
+  rankFlexTier: string;
+  rankFlexTierImg: string;
+  rankFlexRank: string;
+  rankFlexLP: number;
+  rankFlexWins: number;
+  rankFlexLosses: number;
              
 }
 
 export interface ChampionsRecentGamesData{
-  wins: number,
-  games: number,
-  kills: number,
-  deaths: number,
-  assists: number,
-  championPic: string,
-  championPicSplash: string
+  wins: number;
+  games: number;
+  kills: number;
+  deaths: number;
+  assists: number;
+  championPic: string;
+  championPicSplash: string;
 }
 
 export interface RecentGamesData{
-  [key: string]: ChampionsRecentGamesData
+  [key: string]: ChampionsRecentGamesData;
 }
 
 /**
@@ -69,7 +69,6 @@ function AccountContent() {
     document.title =`${gameName}#${tagLine}`
   },[region, gameName, tagLine])
 
-  
   return (
     <BackgroundImgContextProvider>
       <div className = 'account'>

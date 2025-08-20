@@ -10,8 +10,8 @@ import { useState } from 'react'
 import MatchOverview from './MatchOverview'
 
 interface MatchProps{
-    data: MatchData,
-    region: string
+    data: MatchData;
+    region: string;
 }
 
 /**

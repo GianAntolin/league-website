@@ -2,7 +2,7 @@ import '../css/MatchOverviewHeader.css'
 
 
 interface MatchOverviewHeaderProps{
-    win: boolean
+    win: boolean;
 }
 
 /**

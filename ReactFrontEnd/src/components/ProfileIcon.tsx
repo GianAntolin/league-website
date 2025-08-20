@@ -1,8 +1,8 @@
 import '../css/ProfileIcon.css'
 
 interface ProfileIconProps{
-  url: string,
-  level: number
+  url: string;
+  level: number;
 }
 
 /**

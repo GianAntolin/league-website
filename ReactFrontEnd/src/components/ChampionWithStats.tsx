@@ -4,7 +4,7 @@ import '../css/ChampionWithStats.css'
 
 
 interface ChampionWithStatsProps{
-    stats: ChampionsRecentGamesData
+    stats: ChampionsRecentGamesData;
 }
 
 // Display champion stats - win rate, wins, losses, kda, kills, deaths, assists - along with it's champion icon

@@ -1,13 +1,13 @@
 import '../css/RankSummary.css'
 
 interface RankSummaryProps{
-    tier: string
-    tierImg: string
-    rank: string,
-    lp: number, 
-    wins: number,
-    losses: number,
-    queueType: string
+    tier: string;
+    tierImg: string;
+    rank: string;
+    lp: number; 
+    wins: number;
+    losses: number;
+    queueType: string;
 }
 
 function RankSummary({tier, tierImg, rank, lp, wins, losses, queueType} : RankSummaryProps ) {

@@ -1,10 +1,10 @@
 import '../css/championIcon.css'
 
 interface ChampionIconProps{
-    url: string,
-    level: number | null,
-    height: string,
-    width: string
+    url: string;
+    level: number | null;
+    height: string;
+    width: string;
   }
 
 // Display an image with the number at the bottom left corner

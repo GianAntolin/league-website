@@ -1,9 +1,9 @@
 import '../css/SummonerSpell.css'
 
 interface SummonerSpellProps{
-    url: string,
-    height: string,
-    width: string,
+    url: string;
+    height: string;
+    width: string;
 }
 
 /**

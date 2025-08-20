@@ -3,7 +3,7 @@ import math
 import sqlite3
 import datetime
 
-key = "RGAPI-f31c2a41-6e4f-4eac-a411-5345fd14a205" #Expires every 24 hours
+key = "" #Expires every 24 hours
 apiKey = "api_key=" + key
 
 

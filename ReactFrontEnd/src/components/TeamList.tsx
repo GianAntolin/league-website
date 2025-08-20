@@ -3,8 +3,8 @@ import { Participant } from "./MatchHistory"
 import '../css/TeamList.css'
 
 interface TeamListProps{
-    data : Participant,
-    region: string
+    data : Participant;
+    region: string;
 }
 
 /**

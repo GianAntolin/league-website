@@ -3,8 +3,8 @@ import Item from './Item'
 import { ChampionItems } from './MatchHistory'
 
 interface ItemListProps{
-    items: ChampionItems,
-    win: boolean
+    items: ChampionItems;
+    win: boolean;
 }
 
 /**

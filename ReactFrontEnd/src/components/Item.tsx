@@ -2,7 +2,7 @@ import '../css/Item.css'
 
 
 interface ItemProps{
-    url: string
+    url: string;
 }
 
 // Create an img element using the url as a source. If no source is found, return an empty div. 

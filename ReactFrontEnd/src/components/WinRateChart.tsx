@@ -1,10 +1,10 @@
 import '../css/WinRateChart.css'
 
 interface WinRateChartProps{
-    radius: number,
-    percentage: number,
-    circleWidth: number,
-    strokeWidth: number
+    radius: number;
+    percentage: number;
+    circleWidth: number;
+    strokeWidth: number;
 }
 
 // Display a circular progress bar using the percentage as the fill (dashOffset)

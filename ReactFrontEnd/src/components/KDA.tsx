@@ -1,10 +1,10 @@
 import '../css/KDA.css'
 
 interface KDAProps{
-    k: number | string,
-    d: number | string,
-    a: number | string,
-    size: string
+    k: number | string;
+    d: number | string;
+    a: number | string;
+    size: string;
 }
 
 // Creates a text that prints numbers or a string seperated by slashes: (number or string) / (number or string) / (number or string)

@@ -5,7 +5,7 @@ import { useContext } from "react";
 import { BackgroundImgContext } from "../context/BackgroundImgContext";
 
 interface AccountContentProps{
-  summoner: SummonerData
+  summoner: SummonerData;
 }
 
 

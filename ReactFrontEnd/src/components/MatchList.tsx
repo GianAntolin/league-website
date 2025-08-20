@@ -2,8 +2,8 @@ import Match from "./Match"
 import { Matches } from "./MatchHistory"
 
 interface MatchesProp{
-    matches: Matches,
-    region: string
+    matches: Matches;
+    region: string;
 }
 /**
  * 

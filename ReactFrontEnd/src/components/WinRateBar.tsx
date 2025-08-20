@@ -1,9 +1,9 @@
 import '../css/WinRateBar.css'
 
 interface WinRateBarProps{
-    percentage: number,
-    barColor: string,
-    fillColor: string
+    percentage: number;
+    barColor: string;
+    fillColor: string;
 }
 // Display a progress bar using the percentage prop as the fill (width %)
 function WinRateBar({percentage, barColor, fillColor}: WinRateBarProps) {

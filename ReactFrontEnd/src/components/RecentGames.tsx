@@ -7,9 +7,9 @@ import { Matches } from './MatchHistory';
 import { BackgroundImgContext } from '../context/BackgroundImgContext';
 
 interface RecentGamesProps{
-    PUUID: string,
-    region: string,
-    matches: Matches
+    PUUID: string;
+    region: string;
+    matches: Matches;
 }
 
 function RecentGames({PUUID, region, matches} : RecentGamesProps) {
