@@ -3,7 +3,11 @@ import math
 import sqlite3
 import datetime
 
-key = "" #Expires every 24 hours
+import os
+from dotenv import load_dotenv;
+
+load_dotenv()
+key = os.getenv('API_KEY') #Expires every 24 hours
 apiKey = "api_key=" + key
 
 
@@ -112,21 +116,19 @@ summonerSpellID =  {
 
     32: 'SummonerSnowball.png',
 
-    # 2202: 'SummonerCherryFlash.png'
 }
 
 ##
-        #Queue IDs
-            # 0 - custom
+        #Queue IDs for Summoner Rift map 
             # 400 - 5v5 Draft
             # 420 - 5v5 Ranked Solo
             # 430 - 5v5 Blind
             # 440 - Ranked Flex
             # 450 - Aram
-            # 490 - Quickplay
+            # 480 - Normal (Swiftplay)
+            # 1700 - Arena
     #[0] = most recent match
-    ##
-queueTypeWhiteList = [0,400,420,430,440,450,490]
+queueTypeWhiteList = [400,420,430,440,450,480]
 
 # Parameters - gameName: string, tagLine: string, region: string
 # Return - data:  dict or string, response_code : int
@@ -381,11 +383,11 @@ def getQueue(id):
         return "Ranked Flex"
     elif id == 450:
         return "ARAM"
-    elif id == 0: 
-        return "Custom"
+    elif id == 480:
+        return 'Swiftplay'
     else:
-        #id == 490
-        return "Quickplay"
+        #id == 1700
+        return "Unknown"
 
 # Parameters: matchData : dict, participantNumber - int
 # Return: data : dict
@@ -414,7 +416,7 @@ def getMatchData(matchData, participantNumber):
         champion = champion.capitalize()
 
     championPic = ddragonBaseURL + 'img/champion/' + champion + '.png'
-    championPicSplash = 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/' + champion + '_0.jpg'
+    championPicSplash = 'https://ddragon.leagueoflegends.com/cdn/img/champion/centered/' + champion + '_0.jpg'
 
     champLevel = participantInfo['champLevel']
     champ = participantInfo['championName'].capitalize()
