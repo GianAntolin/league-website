@@ -18,7 +18,7 @@ interface MatchOverviewProfileProps{
  * 
  * @param data - Object that represents the match statistic of a single participant
  * 
- * Display match statistics of the participant (champion icon; level, spells, items, etc)
+ * Display match statistics of the participant (champion icon, level, spells, items, etc)
  */
 function MatchOverviewProfile({data, highestDmg, gameDurationM, gameDurationS, region}: MatchOverviewProfileProps) {
 

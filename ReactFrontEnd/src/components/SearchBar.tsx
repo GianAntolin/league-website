@@ -7,8 +7,8 @@ import { Regions } from "../pages/HomePage";
 
 
 interface SearchBarProps{
-    regions: Array<Regions>,
-    regionTags: Array<String>
+    regions: Array<Regions>;
+    regionTags: Array<String>;
 }
 
 /**

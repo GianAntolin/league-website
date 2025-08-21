@@ -2,8 +2,8 @@ import '../css/DropDown.css'
 import { Options } from '../pages/HomePage'
 
 interface DropdownProps{
-    options: Array<Options>,
-    handleSelected: (value: any) => void
+    options: Array<Options>;
+    handleSelected: (value: any) => void;
 }
 
 /**

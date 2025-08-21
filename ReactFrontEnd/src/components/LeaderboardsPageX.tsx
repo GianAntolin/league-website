@@ -5,7 +5,7 @@ import LeaderboardsProfileCard from './LeaderboardsProfileCard'
 
 
 interface LeaderboardsPageXProps{
-    data: LeaderboardsData
+    data: LeaderboardsData;
 }
 
 /**

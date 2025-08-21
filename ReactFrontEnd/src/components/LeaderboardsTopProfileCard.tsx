@@ -5,9 +5,9 @@ import WinRateBar from './WinRateBar'
 import { LeaderboardsProfile } from '../pages/Leaderboards'
 
 interface LeaderboardsTopProfileCardProps{
-  data: LeaderboardsProfile,
-  tier: string,
-  rank: string,
+  data: LeaderboardsProfile;
+  tier: string;
+  rank: string;
 }
 
 /**

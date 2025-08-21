@@ -4,9 +4,9 @@ import { NavLink } from 'react-router-dom'
 import WinRateBar from './WinRateBar'
 
 interface LeaderboardsProfileCardProps{
-  data: LeaderboardsProfile,
-  tier: string,
-  rank: string
+  data: LeaderboardsProfile;
+  tier: string;
+  rank: string;
 }
 /**
  * 

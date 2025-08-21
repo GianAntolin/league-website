@@ -9,24 +9,24 @@ import ErrorLeaderboards from './ErrorLeaderboards';
 import { RegionsData } from './HomePage';
 
 export interface LeaderboardsProfile{
-  icon: string,
-  PUUID: string,
-  lp: number,
-  wins: number,
-  losses: number,
-  level: number,
-  name: string,
-  tag: string,
-  region: string
+  icon: string;
+  PUUID: string;
+  lp: number;
+  wins: number;
+  losses: number;
+  level: number;
+  name: string;
+  tag: string;
+  region: string;
 }
 export interface LeaderboardsProfiles{
-  [key: string] : LeaderboardsProfile
+  [key: string] : LeaderboardsProfile;
 }
 
 export interface LeaderboardsData{
-  profiles: LeaderboardsProfiles,
-  tier: string,
-  maxPages: number
+  profiles: LeaderboardsProfiles;
+  tier: string;
+  maxPages: number;
 }
 
 

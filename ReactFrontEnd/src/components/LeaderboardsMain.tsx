@@ -5,7 +5,7 @@ import LeaderboardsProfileCardHeader from './LeaderboardsProfileCardHeader';
 import '../css/LeaderboardsMain.css'
 
 interface LeaderboardsMainProps{
-    data: LeaderboardsData
+    data: LeaderboardsData;
 }
 
 /**
@@ -19,7 +19,6 @@ interface LeaderboardsMainProps{
  * Each user's name will be a link that'll navigate them to its account's match history
  */
 function LeaderboardsMain( {data} : LeaderboardsMainProps ) {
-    // const data = useOutletContext<LeaderboardsData>();
     return (
         <div className='leaderboards-main'>
         {data && 
