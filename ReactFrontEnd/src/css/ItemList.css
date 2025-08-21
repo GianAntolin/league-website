@@ -32,7 +32,7 @@
     }
 }
 
-@media (max-width: 975px){
+@media (max-width: 1050px){
     .item-list{
         display: flex;
         gap:2xp;

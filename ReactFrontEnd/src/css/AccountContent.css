@@ -86,7 +86,7 @@
     
 }
 
-@media (max-width: 975px) {
+@media (max-width: 1050px) {
     .account-content{
         grid-template-columns: 5% 1fr 5% ;
     }
