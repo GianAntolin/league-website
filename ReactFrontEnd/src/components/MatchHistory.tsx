@@ -25,9 +25,23 @@ export interface Participant{
   'participantName': string;
   'particpantTag': string;
 
-  'summonerSpell1': string;
-  'summonerSpell2': string;
+  summonerSpell1ID: number;
+  summonerSpell2ID: number; 
+  summonerSpell1URL: string;
+  summonerSpell2URL: string;
 
+  summonerKeyStoneID: number;
+  summonerPrimaryPerk1ID : number;
+  summonerPrimaryPerk2ID : number;
+  summonerPrimaryPerk3ID : number;   
+  summonerSecondaryPerk1ID : number;
+  summonerSecondaryPerk2ID : number;
+  summonerKeyStoneURL : string;
+  summonerPrimaryPerk1URL : string;
+  summonerPrimaryPerk2URL : string;
+  summonerPrimaryPerk3URL : string;   
+  summonerSecondaryPerk1URL : string;
+  summonerSecondaryPerk2URL : string;
 
   'kills':  number;
   'deaths': number;

@@ -87,8 +87,8 @@ function Match({data, region}: MatchProps) {
                         <div className='champion-summoner-spells'> 
                             <ChampionIcon url = {mainTarget.championPic} level = {mainTarget.champLevel} height = {`50px`} width = {`50px`}></ChampionIcon>
                             <div className='summoner-spells'>
-                                <SummonerSpell url = {mainTarget.summonerSpell1} height = {`25px`} width = {`25px`}/>
-                                <SummonerSpell url = {mainTarget.summonerSpell2} height = {`25px`} width = {`25px`}/>
+                                <SummonerSpell url = {mainTarget.summonerSpell1URL} height = {`25px`} width = {`25px`}/>
+                                <SummonerSpell url = {mainTarget.summonerSpell2URL} height = {`25px`} width = {`25px`}/>
                             </div>
                         </div>
                         <div className = 'stat-container'>

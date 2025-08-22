@@ -34,8 +34,8 @@ function MatchOverviewProfile({data, highestDmg, gameDurationM, gameDurationS, r
                     </div>
                 </div>
                 <div className='summoner-spells-overview'>
-                    <SummonerSpell url = {data.summonerSpell1} height = {`18px`} width = {`18px`}/>
-                    <SummonerSpell url = {data.summonerSpell2} height = {`18px`} width = {`18px`}/>
+                    <SummonerSpell url = {data.summonerSpell1URL} height = {`18px`} width = {`18px`}/>
+                    <SummonerSpell url = {data.summonerSpell2URL} height = {`18px`} width = {`18px`}/>
                 </div>
             </div>
             <div className = 'overview-profile-name'>
