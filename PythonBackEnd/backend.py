@@ -6,6 +6,7 @@ import datetime
 import os
 from dotenv import load_dotenv;
 
+# API key is stored as an environment variable
 load_dotenv()
 key = os.getenv('API_KEY') #Expires every 24 hours
 apiKey = "api_key=" + key
@@ -99,27 +100,24 @@ def getLatestDDragonversion():
     return "https://ddragon.leagueoflegends.com/cdn/" + DdragonVersions[0] + "/"
 ddragonBaseURL = getLatestDDragonversion()
 
-
 challengerRankedSoloURL = "https://na1.api.riotgames.com/lol/league/v4/challengerleagues/by-queue/RANKED_SOLO_5x5" #platform
 
-summonerSpellID =  {
-    1 : "SummonerBoost.png",
-    3 : "SummonerExhaust.png",
-    4 : "SummonerFlash.png",
-    6 : "SummonerHaste.png",
-    7 : "SummonerHeal.png",
-    11 : "SummonerSmite.png",
-    12 : "SummonerTeleport.png",
-    13 : "SummonerMana.png",
-    14 : "SummonerDot.png",
-    21 : "SummonerBarrier.png",
 
-    32: 'SummonerSnowball.png',
+# API call to get summoner spells data
+def getSummonerSpellsData():
+    response = requests.get( ddragonBaseURL + "data/en_US/summoner.json") 
+    summonerSpells = response.json()
+    return summonerSpells['data']
 
-}
+#API call to get runes data
+def getRunesData(): 
+    response = requests.get(ddragonBaseURL + "data/en_US/runesReforged.json")
+    return response.json()
 
-##
-        #Queue IDs for Summoner Rift map 
+summonerSpellID = getSummonerSpellsData()
+runesData = getRunesData()
+
+    #Queue IDs for Summoner Rift map 
             # 400 - 5v5 Draft
             # 420 - 5v5 Ranked Solo
             # 430 - 5v5 Blind
@@ -129,6 +127,8 @@ summonerSpellID =  {
             # 1700 - Arena
     #[0] = most recent match
 queueTypeWhiteList = [400,420,430,440,450,480]
+styleClassic = [400,420,430,440,450,480]
+styleArena = [1700]
 
 # Parameters - gameName: string, tagLine: string, region: string
 # Return - data:  dict or string, response_code : int
@@ -351,8 +351,10 @@ def matchList(region, id, start, count):
                                 continue
                             
                             cursor.execute("""INSERT INTO participants VALUES (:participantID, :matchID, :region, :participantNumber, :participantName, 
-                                :particpantTag, :PUUID, :summonerSpell1, :summonerSpell2, :kills, :deaths, 
-                                :assists, :kda, :cs, :totalWards, :visionWards, :wardsKilled, :visionScore, :totalDmgToChamps,
+                                :particpantTag, :PUUID, :summonerSpell1ID, :summonerSpell2ID, :summonerSpell1URL, :summonerSpell2URL, :summonerKeyStoneID, :summonerPrimaryPerk1ID, 
+                                :summonerPrimaryPerk2ID, :summonerPrimaryPerk3ID, :summonerSecondaryPerk1ID, :summonerSecondaryPerk2ID, :summonerKeyStoneURL, :summonerPrimaryPerk1URL, 
+                                :summonerPrimaryPerk2URL, :summonerPrimaryPerk3URL, :summonerSecondaryPerk1URL, :summonerSecondaryPerk2URL,:kills, :deaths, :assists, 
+                                :kda, :cs, :totalWards, :visionWards, :wardsKilled, :visionScore, :totalDmgToChamps,
                                 :champion, :champLevel, :championPic, :championPicSplash, :item0, :item1, :item2, :item3, :item4, :item5, :item6, :win)""", participantData)
                         if matchDetails['totalDmgToChamps'] > highestDmg:
                             highestDmg = matchDetails['totalDmgToChamps'] 
@@ -388,6 +390,23 @@ def getQueue(id):
     else:
         #id == 1700
         return "Unknown"
+    
+def getSummonerSpellURL(id): 
+    for spell in summonerSpellID.values(): 
+        if spell['key'] == str(id): 
+            return spell['image']['full']
+
+    return None 
+
+def getRunesURL(id): 
+    for runeType in runesData:
+        for runeSlots in runeType['slots']:
+            for runeTier in runeSlots.values():
+                for rune in runeTier:
+                    if rune['id'] == id: 
+                       print(rune['id'], rune['icon'])
+                       return rune['icon']
+    return None 
 
 # Parameters: matchData : dict, participantNumber - int
 # Return: data : dict
@@ -406,9 +425,25 @@ def getMatchData(matchData, participantNumber):
     
     summonerSpell1ID = participantInfo['summoner1Id']
     summonerSpell2ID = participantInfo['summoner2Id']
+
+    summonerKeyStoneID = participantInfo['perks']['styles'][0]['selections'][0]['perk']
+    summonerPrimaryPerk1ID = participantInfo['perks']['styles'][0]['selections'][1]['perk']
+    summonerPrimaryPerk2ID = participantInfo['perks']['styles'][0]['selections'][2]['perk']
+    summonerPrimaryPerk3ID = participantInfo['perks']['styles'][0]['selections'][3]['perk']
+    summonerSecondaryPerk1ID = participantInfo['perks']['styles'][1]['selections'][0]['perk']
+    summonerSecondaryPerk2ID = participantInfo['perks']['styles'][1]['selections'][1]['perk']
     
-    summonerSpell1 = ddragonBaseURL + 'img/spell/' + summonerSpellID[summonerSpell1ID]
-    summonerSpell2 = ddragonBaseURL + 'img/spell/' + summonerSpellID[summonerSpell2ID]
+    summonerKeyStoneURL = "https://ddragon.leagueoflegends.com/cdn/img/" + getRunesURL(summonerKeyStoneID)
+    summonerPrimaryPerk1URL = "https://ddragon.leagueoflegends.com/cdn/img/" + getRunesURL(summonerPrimaryPerk1ID)
+    summonerPrimaryPerk2URL = "https://ddragon.leagueoflegends.com/cdn/img/" + getRunesURL(summonerPrimaryPerk2ID)
+    summonerPrimaryPerk3URL = "https://ddragon.leagueoflegends.com/cdn/img/" + getRunesURL(summonerPrimaryPerk3ID)
+    summonerSecondaryPerk1URL = "https://ddragon.leagueoflegends.com/cdn/img/" + getRunesURL(summonerSecondaryPerk1ID)
+    summonerSecondaryPerk2URL = "https://ddragon.leagueoflegends.com/cdn/img/" + getRunesURL(summonerSecondaryPerk2ID)
+
+
+
+    summonerSpell1 = ddragonBaseURL + 'img/spell/' + getSummonerSpellURL(summonerSpell1ID)
+    summonerSpell2 = ddragonBaseURL + 'img/spell/' + getSummonerSpellURL(summonerSpell2ID)
 
 
     champion = participantInfo['championName']
@@ -451,8 +486,24 @@ def getMatchData(matchData, participantNumber):
         'particpantTag': particpantTag,
         'PUUID' : participantID,
 
-        'summonerSpell1': summonerSpell1,
-        'summonerSpell2': summonerSpell2,
+        'summonerSpell1ID': summonerSpell1ID, 
+        'summonerSpell2ID': summonerSpell1ID,
+        'summonerSpell1URL': summonerSpell1,
+        'summonerSpell2URL': summonerSpell2,
+
+        'summonerKeyStoneID' : summonerKeyStoneID,
+        'summonerPrimaryPerk1ID' : summonerPrimaryPerk1ID,
+        'summonerPrimaryPerk2ID' : summonerPrimaryPerk2ID,
+        'summonerPrimaryPerk3ID' : summonerPrimaryPerk3ID,
+        'summonerSecondaryPerk1ID' : summonerSecondaryPerk1ID,
+        'summonerSecondaryPerk2ID' : summonerSecondaryPerk2ID,
+
+        'summonerKeyStoneURL': summonerKeyStoneURL, 
+        'summonerPrimaryPerk1URL': summonerPrimaryPerk1URL,
+        'summonerPrimaryPerk2URL': summonerPrimaryPerk2URL,
+        'summonerPrimaryPerk3URL': summonerPrimaryPerk3URL,
+        'summonerSecondaryPerk1URL': summonerSecondaryPerk1URL,
+        'summonerSecondaryPerk2URL': summonerSecondaryPerk2URL,
 
         'kills':  kills,
         'deaths': deaths,
