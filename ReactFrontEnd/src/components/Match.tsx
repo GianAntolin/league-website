@@ -86,9 +86,19 @@ function Match({data, region}: MatchProps) {
                     <div className='match-display-section1'>
                         <div className='champion-summoner-spells'> 
                             <ChampionIcon url = {mainTarget.championPic} level = {mainTarget.champLevel} height = {`50px`} width = {`50px`}></ChampionIcon>
-                            <div className='summoner-spells'>
-                                <SummonerSpell url = {mainTarget.summonerSpell1URL} height = {`25px`} width = {`25px`}/>
-                                <SummonerSpell url = {mainTarget.summonerSpell2URL} height = {`25px`} width = {`25px`}/>
+                            <div className = 'match-summoner-spells-runes'>
+                                <div className='match-summoner-spell1' style={{gridArea: '1/1/2/2'}}>
+                                    <SummonerSpell url = {mainTarget.summonerSpell1URL} height = {`24px`} width = {`24px`}/>
+                                </div>
+                                <div className='match-summoner-spell2' style={{gridArea: '2/1/3/2'}}> 
+                                    <SummonerSpell url = {mainTarget.summonerSpell2URL} height = {`24px`} width = {`24px`}/>
+                                </div>
+                                <div className='match-rune1' style={{borderRadius: '3px', gridArea: '1/2/2/3', backgroundColor: mainTarget.win ? '#3776fc': '#59343b'}}>
+                                    <img src={mainTarget.summonerKeyStoneURL} style={{height: '24px', width: '24px'}} />
+                                </div>
+                                <div className='match-rune2'style={{borderRadius: '3px', gridArea: '2/2/3/3', backgroundColor: mainTarget.win ? '#3776fc': '#59343b'}}>
+                                    <img src={mainTarget.summonerSecondaryRuneTypeURL} style={{height: '24px', width: '24px', transform: 'scale(0.85)'}}/>
+                                </div>
                             </div>
                         </div>
                         <div className = 'stat-container'>

@@ -14,7 +14,7 @@ interface SummonerSpellProps{
  */
 function SummonerSpell({url, height, width}: SummonerSpellProps) {
   return (
-    <div className='summoner-spell-container'>
+    <div className='summoner-spell-container' style = {{height: `${height}`, width: `${width}`}}>
         <img className='summoner-spell' src= {url} style = {{height: `${height}`, width: `${width}`}}></img>
     </div>
   )

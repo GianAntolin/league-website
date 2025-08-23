@@ -30,16 +30,19 @@ export interface Participant{
   summonerSpell1URL: string;
   summonerSpell2URL: string;
 
+  summonerPrimaryRuneTypeURL: string;
   summonerKeyStoneID: number;
   summonerPrimaryPerk1ID : number;
   summonerPrimaryPerk2ID : number;
   summonerPrimaryPerk3ID : number;   
-  summonerSecondaryPerk1ID : number;
-  summonerSecondaryPerk2ID : number;
   summonerKeyStoneURL : string;
   summonerPrimaryPerk1URL : string;
   summonerPrimaryPerk2URL : string;
-  summonerPrimaryPerk3URL : string;   
+  summonerPrimaryPerk3URL : string;  
+
+  summonerSecondaryRuneTypeURL: string;
+  summonerSecondaryPerk1ID : number;
+  summonerSecondaryPerk2ID : number;
   summonerSecondaryPerk1URL : string;
   summonerSecondaryPerk2URL : string;
 

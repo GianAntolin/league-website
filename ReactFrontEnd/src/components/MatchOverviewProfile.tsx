@@ -33,9 +33,19 @@ function MatchOverviewProfile({data, highestDmg, gameDurationM, gameDurationS, r
                         </span>
                     </div>
                 </div>
-                <div className='summoner-spells-overview'>
-                    <SummonerSpell url = {data.summonerSpell1URL} height = {`18px`} width = {`18px`}/>
-                    <SummonerSpell url = {data.summonerSpell2URL} height = {`18px`} width = {`18px`}/>
+                <div className = 'matchOverview-summoner-spells-runes'>
+                    <div className='matchOverview-summoner-spell1' style={{gridArea: '1/1/2/2'}}>
+                        <SummonerSpell url = {data.summonerSpell1URL} height = {`17px`} width = {`17px`}/>
+                    </div>
+                    <div className='matchOverview-summoner-spell2' style={{gridArea: '2/1/3/2'}}> 
+                        <SummonerSpell url = {data.summonerSpell2URL} height = {`17px`} width = {`17px`}/>
+                    </div>
+                    <div className='matchOverview-rune1' style={{borderRadius: '3px', gridArea: '1/2/2/3', backgroundColor: '#191937'}}>
+                        <img src={data.summonerKeyStoneURL} style={{height: '17px', width: '17px', display: 'flex'}} />
+                    </div>
+                    <div className='matchOverview-rune2'style={{borderRadius: '3px', gridArea: '2/2/3/3', backgroundColor: '#191937'}}>
+                        <img src={data.summonerSecondaryRuneTypeURL} style={{height: '17px', width: '17px', display: 'flex', transform: 'scale(0.85)'}}/>
+                    </div>
                 </div>
             </div>
             <div className = 'overview-profile-name'>
