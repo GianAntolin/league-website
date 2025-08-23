@@ -173,9 +173,9 @@ def matchList(region, id, start, count):
             # Get all the participants for the match
             cursor.execute("""SELECT participantName, particpantTag, PUUID, summonerSpell1ID, 
                         summonerSpell2ID, summonerSpell1URL, summonerSpell2URL, 
-                        summonerKeyStoneID, summonerPrimaryPerk1ID, summonerPrimaryPerk2ID, summonerPrimaryPerk3ID,   
-                        summonerSecondaryPerk1ID, summonerSecondaryPerk2ID, 
+                        summonerPrimaryRuneTypeURL, summonerKeyStoneID, summonerPrimaryPerk1ID, summonerPrimaryPerk2ID, summonerPrimaryPerk3ID,   
                         summonerKeyStoneURL, summonerPrimaryPerk1URL, summonerPrimaryPerk2URL, summonerPrimaryPerk3URL,   
+                        summonerSecondaryRuneTypeURL, summonerSecondaryPerk1ID, summonerSecondaryPerk2ID, 
                         summonerSecondaryPerk1URL, summonerSecondaryPerk2URL,
                         kills, deaths, assists, kda, cs, totalWards, visionWards,
                         wardsKilled, visionScore, totalDmgToChamps, champLevel, championPic, win 

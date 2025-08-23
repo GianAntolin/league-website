@@ -351,10 +351,11 @@ def matchList(region, id, start, count):
                                 continue
                             
                             cursor.execute("""INSERT INTO participants VALUES (:participantID, :matchID, :region, :participantNumber, :participantName, 
-                                :particpantTag, :PUUID, :summonerSpell1ID, :summonerSpell2ID, :summonerSpell1URL, :summonerSpell2URL, :summonerKeyStoneID, :summonerPrimaryPerk1ID, 
-                                :summonerPrimaryPerk2ID, :summonerPrimaryPerk3ID, :summonerSecondaryPerk1ID, :summonerSecondaryPerk2ID, :summonerKeyStoneURL, :summonerPrimaryPerk1URL, 
-                                :summonerPrimaryPerk2URL, :summonerPrimaryPerk3URL, :summonerSecondaryPerk1URL, :summonerSecondaryPerk2URL,:kills, :deaths, :assists, 
-                                :kda, :cs, :totalWards, :visionWards, :wardsKilled, :visionScore, :totalDmgToChamps,
+                                :particpantTag, :PUUID, :summonerSpell1ID, :summonerSpell2ID, :summonerSpell1URL, :summonerSpell2URL, 
+                                :summonerPrimaryRuneTypeURL, :summonerKeyStoneID, :summonerPrimaryPerk1ID, :summonerPrimaryPerk2ID, :summonerPrimaryPerk3ID, 
+                                :summonerKeyStoneURL, :summonerPrimaryPerk1URL, :summonerPrimaryPerk2URL, :summonerPrimaryPerk3URL, 
+                                :summonerSecondaryRuneTypeURL, :summonerSecondaryPerk1ID, :summonerSecondaryPerk2ID, :summonerSecondaryPerk1URL, :summonerSecondaryPerk2URL,
+                                :kills, :deaths, :assists, :kda, :cs, :totalWards, :visionWards, :wardsKilled, :visionScore, :totalDmgToChamps,
                                 :champion, :champLevel, :championPic, :championPicSplash, :item0, :item1, :item2, :item3, :item4, :item5, :item6, :win)""", participantData)
                         if matchDetails['totalDmgToChamps'] > highestDmg:
                             highestDmg = matchDetails['totalDmgToChamps'] 
@@ -404,8 +405,7 @@ def getRunesURL(id):
             for runeTier in runeSlots.values():
                 for rune in runeTier:
                     if rune['id'] == id: 
-                       print(rune['id'], rune['icon'])
-                       return rune['icon']
+                       return rune['icon'], runeType['icon']
     return None 
 
 # Parameters: matchData : dict, participantNumber - int
@@ -433,14 +433,18 @@ def getMatchData(matchData, participantNumber):
     summonerSecondaryPerk1ID = participantInfo['perks']['styles'][1]['selections'][0]['perk']
     summonerSecondaryPerk2ID = participantInfo['perks']['styles'][1]['selections'][1]['perk']
     
-    summonerKeyStoneURL = "https://ddragon.leagueoflegends.com/cdn/img/" + getRunesURL(summonerKeyStoneID)
-    summonerPrimaryPerk1URL = "https://ddragon.leagueoflegends.com/cdn/img/" + getRunesURL(summonerPrimaryPerk1ID)
-    summonerPrimaryPerk2URL = "https://ddragon.leagueoflegends.com/cdn/img/" + getRunesURL(summonerPrimaryPerk2ID)
-    summonerPrimaryPerk3URL = "https://ddragon.leagueoflegends.com/cdn/img/" + getRunesURL(summonerPrimaryPerk3ID)
-    summonerSecondaryPerk1URL = "https://ddragon.leagueoflegends.com/cdn/img/" + getRunesURL(summonerSecondaryPerk1ID)
-    summonerSecondaryPerk2URL = "https://ddragon.leagueoflegends.com/cdn/img/" + getRunesURL(summonerSecondaryPerk2ID)
+    primaryRuneType = getRunesURL(summonerKeyStoneID)
+    summonerPrimaryRuneTypeURL = "https://ddragon.leagueoflegends.com/cdn/img/" + primaryRuneType[1]
+    summonerKeyStoneURL = "https://ddragon.leagueoflegends.com/cdn/img/" + primaryRuneType[0]
 
+    summonerPrimaryPerk1URL = "https://ddragon.leagueoflegends.com/cdn/img/" + getRunesURL(summonerPrimaryPerk1ID)[0]
+    summonerPrimaryPerk2URL = "https://ddragon.leagueoflegends.com/cdn/img/" + getRunesURL(summonerPrimaryPerk2ID)[0]
+    summonerPrimaryPerk3URL = "https://ddragon.leagueoflegends.com/cdn/img/" + getRunesURL(summonerPrimaryPerk3ID)[0]
 
+    secondaryRune = getRunesURL(summonerSecondaryPerk1ID)
+    summonerSecondaryRuneTypeURL = "https://ddragon.leagueoflegends.com/cdn/img/"  + secondaryRune[1]
+    summonerSecondaryPerk1URL = "https://ddragon.leagueoflegends.com/cdn/img/" + secondaryRune[0]
+    summonerSecondaryPerk2URL = "https://ddragon.leagueoflegends.com/cdn/img/" + getRunesURL(summonerSecondaryPerk2ID)[0]
 
     summonerSpell1 = ddragonBaseURL + 'img/spell/' + getSummonerSpellURL(summonerSpell1ID)
     summonerSpell2 = ddragonBaseURL + 'img/spell/' + getSummonerSpellURL(summonerSpell2ID)
@@ -491,6 +495,7 @@ def getMatchData(matchData, participantNumber):
         'summonerSpell1URL': summonerSpell1,
         'summonerSpell2URL': summonerSpell2,
 
+        'summonerPrimaryRuneTypeURL': summonerPrimaryRuneTypeURL, 
         'summonerKeyStoneID' : summonerKeyStoneID,
         'summonerPrimaryPerk1ID' : summonerPrimaryPerk1ID,
         'summonerPrimaryPerk2ID' : summonerPrimaryPerk2ID,
@@ -498,6 +503,7 @@ def getMatchData(matchData, participantNumber):
         'summonerSecondaryPerk1ID' : summonerSecondaryPerk1ID,
         'summonerSecondaryPerk2ID' : summonerSecondaryPerk2ID,
 
+        'summonerSecondaryRuneTypeURL': summonerSecondaryRuneTypeURL,
         'summonerKeyStoneURL': summonerKeyStoneURL, 
         'summonerPrimaryPerk1URL': summonerPrimaryPerk1URL,
         'summonerPrimaryPerk2URL': summonerPrimaryPerk2URL,
