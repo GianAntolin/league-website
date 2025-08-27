@@ -27,7 +27,7 @@ function MatchOverview({data, region}:MatchOverviewProps) {
                 <div className='match-overview-section1'>
                     <MatchOverviewHeader win = {data.participants[team1start].win}></MatchOverviewHeader>
                 </div>
-                <div className='overview-team'>
+                <div className='overview-team' style = {{backgroundColor: data.participants[team1start].win ? 'var(--victory)' : 'var(--defeat)'}}>
                     {
                     Object.values(data.participants).slice(team1start, team1end).map( (participant) => (
                             <MatchOverviewProfile 
@@ -44,7 +44,7 @@ function MatchOverview({data, region}:MatchOverviewProps) {
                 <div className='match-overview-section2'>
                     <MatchOverviewHeader win = {data.participants[team2start].win}></MatchOverviewHeader>
                 </div>
-                <div className='overview-team'>
+                <div className='overview-team' style = {{backgroundColor: data.participants[team2start].win? 'var(--victory)' : 'var(--defeat)'}}>
                     {
                     Object.values(data.participants).slice(team2start, team2end).map( (participant) => (
                             <MatchOverviewProfile 

@@ -93,10 +93,10 @@ function Match({data, region}: MatchProps) {
                                 <div className='match-summoner-spell2' style={{gridArea: '2/1/3/2'}}> 
                                     <SummonerSpell url = {mainTarget.summonerSpell2URL} height = {`24px`} width = {`24px`}/>
                                 </div>
-                                <div className='match-rune1' style={{borderRadius: '3px', gridArea: '1/2/2/3', backgroundColor: mainTarget.win ? '#3776fc': '#59343b'}}>
+                                <div className='match-rune1' style={{borderRadius: '3px', gridArea: '1/2/2/3', backgroundColor: mainTarget.win ? '#223b80': '#59343b'}}>
                                     <img src={mainTarget.summonerKeyStoneURL} style={{height: '24px', width: '24px'}} />
                                 </div>
-                                <div className='match-rune2'style={{borderRadius: '3px', gridArea: '2/2/3/3', backgroundColor: mainTarget.win ? '#3776fc': '#59343b'}}>
+                                <div className='match-rune2'style={{borderRadius: '3px', gridArea: '2/2/3/3', backgroundColor: mainTarget.win ? '#223b80': '#59343b'}}>
                                     <img src={mainTarget.summonerSecondaryRuneTypeURL} style={{height: '24px', width: '24px', transform: 'scale(0.85)'}}/>
                                 </div>
                             </div>
@@ -125,7 +125,14 @@ function Match({data, region}: MatchProps) {
                                 <div className='match-wards-hover'>
                                     Wards Placed (Control Wards Placed) / Wards Killed
                                 </div>
-                                {mainTarget.totalWards} ({mainTarget.visionWards}) / {mainTarget.wardsKilled}
+                                <div className='match-wards-ui'>
+                                    <span className = 'match-wards-text'>
+                                            {mainTarget.totalWards} ({mainTarget.visionWards}) / {mainTarget.wardsKilled}
+                                    </span>
+                                    <img className= 'match-wards-img' src="https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/svg/position-utility-light.svg"/>   
+
+                                </div>  
+                                
                             </div>
                         </div>
 

@@ -23,7 +23,7 @@ interface MatchOverviewProfileProps{
 function MatchOverviewProfile({data, highestDmg, gameDurationM, gameDurationS, region}: MatchOverviewProfileProps) {
 
     return (
-        <div className='overview-profile-top' style = {{backgroundColor: data.win ? 'var(--victory)' : 'var(--defeat)'}}>
+        <div className='overview-profile-top'>
             <div className='champion-summoner-spells-overview'> 
                 <div className='champion-level-overview'>
                     <img src = {data.championPic} height = {`36px`} width = {`36px`}></img>
@@ -70,9 +70,10 @@ function MatchOverviewProfile({data, highestDmg, gameDurationM, gameDurationS, r
                 </div>
             </div>
                 <div className ='overview-vision-top'>
-                    <div className='overview-vision'>
-                        {data.visionScore}   
-                    </div>
+                    <span className='overview-vision'>
+                        {data.visionScore}                                         
+                    </span>
+                    <img className='overview-vision-img' src="https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/svg/position-utility-light.svg"/>   
                 </div>
             <div className ='overview-cs-top'>
                 <div className='overview-cs'>

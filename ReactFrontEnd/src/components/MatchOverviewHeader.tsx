@@ -25,23 +25,6 @@ function MatchOverviewHeader({win}:MatchOverviewHeaderProps) {
                 </span>
                 }
             </div>
-            <div className='match-overview-header-KDA'>
-                <span>
-                    KDA
-                </span>
-            </div>
-            <div className='match-overview-header-DMG'>
-                Damage
-            </div>
-            <div className='match-overview-header-WARDS'>
-                Wards
-            </div>
-            <div className='match-overview-header-CS'>
-                CS
-            </div>
-            <div className='match-overview-header-ITEMS'>
-                Items
-            </div>
         </div>
     )
 }
