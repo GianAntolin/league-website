@@ -91,7 +91,6 @@ export interface MatchData{
 }
 
 export interface Matches{
-    // matches: MatchData | null
     [key: string]: MatchData;
 }
 

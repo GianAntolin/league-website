@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS  # Import CORS
 import backend
 import sqlite3
@@ -18,10 +18,10 @@ def printTable(tableName: str):
         cursor.execute(f"Select * FROM {tableName}")
         data = cursor.fetchall()
         rows = [dict(row) for row in data]
-        with open('test.txt', 'w') as f:
+        with open('test/results/tables.txt', 'w') as f:
             for i in rows:
-                print(i)
-            print(len(rows))
+                print(i, file=f)
+            print(len(rows), file=f)
     cursor.close()
     connection.close()
 
@@ -70,6 +70,73 @@ def timeElapsed(time2):
         return f'{secondsElapsed} {timeUnit} ago'
         
 
+#Get account suggestions based on user input
+@app.route('/api/search')
+def getAccountSuggestions():
+    region = request.args.get('region')
+    name = request.args.get('name')
+    # If no name is provided, return None. 
+    if name == '':
+        return jsonify(None)
+    tag = request.args.get('tag')
+
+    with sqlite3.connect('website.db') as connection:
+        connection.row_factory = sqlite3.Row
+        cursor = connection.cursor()
+        data = []
+        # Search for accounts name similar to the input
+        # Order will determined by: 
+            # name matching 
+            # tag matching 
+            # alphabetically by name
+            # alphabetically by region
+        cursor.execute(""" SELECT * FROM accounts
+                            WHERE 
+                                region = :region COLLATE NOCASE 
+                                AND name LIKE :like_name AND tag LIKE :like_tag
+                            ORDER BY
+                                CASE
+                                    WHEN name = :name THEN 0 
+                                    WHEN name LIKE :start_name THEN 1  
+                                    WHEN name LIKE :like_name THEN 2
+                                    ELSE 3
+                                END,
+                                CASE
+                                    WHEN tag = :tag THEN 0
+                                    WHEN tag LIKE :start_tag THEN 1
+                                    WHEN tag LIKE :like_tag THEN 2
+                                    ELSE 3
+                                END,
+                                name ASC,
+                                tag ASC                   
+                            LIMIT 3
+                       """, { 'region': region, 
+                              'name': name, 'tag': tag, 
+                              'start_name': f'{name}%', 
+                              'like_name': f'%{name}%' if name != '' else '%', 
+                              'like_tag': f'%{tag}%' if tag != '' else '%', 
+                              'start_tag': f'{tag}%'
+                              })
+                       
+        accountData = cursor.fetchall()
+        #Iterate through the results and store the relevant data
+        for account in accountData:     
+            account = dict(account)
+            accountData = {}
+            accountData['name'] = account['name']   
+            accountData['tag'] = account['tag']
+            accountData['icon'] = account['icon']
+            accountData['region'] = account['region']
+            data.append(accountData)
+        with open('test/results/test.txt', 'w') as f:
+            print('Testing: @Framework', file=f)
+            print(f'name = {name}, tag = {tag}, region = {region}', file=f)
+            for x in data: 
+                print(x, file=f)  
+    cursor.close()
+    connection.close()     
+    return jsonify(data) if len(data) != 0 else jsonify(None)
+
 # Get data from matches between two time stamps (start - end)
 @app.route('/api/<region>/<PUUID>/<start>/<end>')
 def recentGamesData(region, PUUID, start, end):
@@ -77,7 +144,7 @@ def recentGamesData(region, PUUID, start, end):
         connection.row_factory = sqlite3.Row
         cursor = connection.cursor()
         data = {}
-        # Search in the matches database where the endtime in unix is between the start and end
+        # Search in the matches tables in the database where the endtime in unix is between the start and end
         cursor.execute("""SELECT * FROM matches 
                     WHERE region = :region AND gameEndTimestamp BETWEEN :start AND :end
                     ORDER BY gameEndTimestamp ASC""", {'region': region.upper(), 'start': int(start), 'end': int(end)})
@@ -227,3 +294,6 @@ def getLeaderboards(region, type, start, end):
     
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+printTable('accounts')

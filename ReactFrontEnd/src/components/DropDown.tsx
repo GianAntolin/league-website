@@ -1,8 +1,8 @@
 import '../css/DropDown.css'
-import { Options } from '../pages/HomePage'
+import { Regions } from '../pages/HomePage'
 
 interface DropdownProps{
-    options: Array<Options>;
+    options: Array<Regions>;
     handleSelected: (value: any) => void;
 }
 
@@ -27,11 +27,14 @@ function DropDown( {options, handleSelected} : DropdownProps)  {
                             onClick = { () => {
                                 handleSelected(item.value)
                             }}>
-                            <span className='drop-dow-list-label' style= {{backgroundColor: item.color}}>
+                            <span className='drop-down-list-label' style= {{backgroundColor: item.color}}>
                                 {item.label}
                             </span>
-                        </li>
+                            <span className='drop-down-list-name'>
+                                {item.name}
+                            </span>
 
+                        </li>
                     ))
                     }
                 </ul>
