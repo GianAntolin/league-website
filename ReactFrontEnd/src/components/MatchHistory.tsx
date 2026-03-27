@@ -6,8 +6,8 @@ import ErrorPage from "../pages/ErrorPage";
 import MatchList from "./MatchList";
 import KDA from "./KDA";
 import NoRecentMatches from "./NoRecentMatches";
-import WinRateChart from "./WinRateChart";
 import RecentGames from "./RecentGames";
+import WinRateArc from "./WinRateArc";
 
 export interface ChampionItems{
   item0: string; 
@@ -221,13 +221,7 @@ function MatchHistory({id, region}: MatchHistoryProps) {
             <div className = 'match-history-stats'>
               <div className="match-history-stats-content">
                 <div className="match-history-section-1">
-                  <WinRateChart percentage={winRate} circleWidth = {40} radius={15} strokeWidth={5}></WinRateChart>
-                  <span className = 'match-history-section1-wins'>
-                    {wins} <span style={{color: '#3776fc'}}>W</span> {games - wins} <span style={{color: '#f82b51'}}>L</span>
-                  </span>
-                  <span className = 'match-history-section1-WR'> 
-                      {Math.round(winRate * 100)}% WR
-                  </span>
+                  <WinRateArc percentage={winRate} size={80} strokeWidth={7.5} fontSize = {12} wins = {wins} loses ={games - wins}/>
                 </div>
                 <div className='match-history-section-2'>
                   <KDA k = {(totalKills/games).toFixed(1)} d = {(totalDeaths/games).toFixed(1)} a = {(totalAssists/games).toFixed(1)} size={'14px'}></KDA>

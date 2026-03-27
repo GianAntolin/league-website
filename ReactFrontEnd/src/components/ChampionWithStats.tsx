@@ -54,7 +54,7 @@ function ChampionWithStats( {stats} : ChampionWithStatsProps) {
                         <span className ='champion-stats-WR' style = {{color: winrateColor, fontWeight: "bolder"}}>
                             {winrate}%
                         </span> 
-                        <span style={{color: '#b8c6db', fontWeight: "bolder"}}>
+                        <span style={{color: 'gray', fontWeight: "bolder"}}>
                             &nbsp;| {stats['wins']}W {stats['games'] - stats['wins']}L
                         </span>
                     </div>
