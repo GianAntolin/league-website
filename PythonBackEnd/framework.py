@@ -10,21 +10,6 @@ app = Flask(__name__)
 # Enable CORS for all routes (this will allow all origins)
 CORS(app)
 
-# Testing purposes: Print the contents of a table to a text file
-def printTable(tableName: str):
-    with sqlite3.connect('website.db') as connection:
-        connection.row_factory = sqlite3.Row
-        cursor = connection.cursor()
-        cursor.execute(f"Select * FROM {tableName}")
-        data = cursor.fetchall()
-        rows = [dict(row) for row in data]
-        with open('test/results/tables.txt', 'w') as f:
-            for i in rows:
-                print(i, file=f)
-            print(len(rows), file=f)
-    cursor.close()
-    connection.close()
-
 # Find the delta between now and an argument, time2 (in seconds)
 # Return a string that displays the delta 
 # in seconds, minutes, days, weeks or months
@@ -71,7 +56,7 @@ def timeElapsed(time2):
         
 
 #Get account suggestions based on user input
-@app.route('/api/search')
+@app.route('/api/search', methods = ['GET'])
 def getAccountSuggestions():
     region = request.args.get('region')
     name = request.args.get('name')
@@ -138,7 +123,7 @@ def getAccountSuggestions():
     return jsonify(data) if len(data) != 0 else jsonify(None)
 
 # Get data from matches between two time stamps (start - end)
-@app.route('/api/<region>/<PUUID>/<start>/<end>')
+@app.route('/api/<region>/<PUUID>/<start>/<end>', methods = ['GET'])
 def recentGamesData(region, PUUID, start, end):
     with sqlite3.connect('website.db') as connection:
         connection.row_factory = sqlite3.Row
@@ -187,8 +172,13 @@ def recentGamesData(region, PUUID, start, end):
 
 # Check if account exists 
 # If so, insert/update the account to the database
-@app.route('/api/account/<region>/<gameName>/<tagLine>', methods=['GET'])
-def account(region, gameName,tagLine): 
+@app.route('/api/accounts', methods=['GET'])
+def account(): 
+    region = request.args.get('region')
+    gameName = request.args.get('name')
+    tagLine = request.args.get('tag')
+    puuid = request.args.get('puuid')
+
     with sqlite3.connect('website.db') as connection:
         connection.row_factory = sqlite3.Row
         cursor = connection.cursor()
@@ -207,7 +197,7 @@ def account(region, gameName,tagLine):
     return jsonify(data), status_code
 
 #Insert matches to the database based on the user's region, id.
-@app.route('/api/matchlist/<region>/<id>/<start>/<count>')
+@app.route('/api/matchlist/<region>/<id>/<start>/<count>', methods = ['GET'])
 def matchList(region, id, start, count):
     with sqlite3.connect('website.db') as connection: 
         connection.row_factory = sqlite3.Row
@@ -284,7 +274,7 @@ def matchList(region, id, start, count):
     return jsonify(data), status_code
 
 # Get the current leaderboard rankings
-@app.route('/api/leaderboards/<region>/<type>/<start>/<end>')
+@app.route('/api/leaderboards/<region>/<type>/<start>/<end>', methods = ['GET'])
 def getLeaderboards(region, type, start, end):
     leaderboards = backend.getLeaderboards(region, type, start, end)
     data = leaderboards[0]
@@ -296,4 +286,3 @@ if __name__ == '__main__':
     app.run(debug=True)
 
 
-printTable('accounts')

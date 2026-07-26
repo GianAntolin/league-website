@@ -171,7 +171,7 @@ function SearchBar( {regions ,regionTags} : SearchBarProps){
                         <div className="search-bar-suggestions">
                             <ul>
                                 {data.map( user => (
-                                    <NavLink key={`${user.name}#${user.tag}`} to = {`/account/${user.region}/${user.name}/${user.tag}`}>
+                                    <NavLink key={`${user.name}#${user.tag}`} to = {`/accounts/${user.region}/${user.name}/${user.tag}`}>
                                         <li>  
                                             <img src = {user.icon}/>
                                                 <span className='search-bar-suggestions-name'>

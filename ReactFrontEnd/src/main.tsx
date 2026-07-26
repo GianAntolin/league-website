@@ -25,7 +25,7 @@ const router = createBrowserRouter([
         element: <Leaderboards/>
       },
       {
-        path: '/account/:region/:gameName/:tagLine',
+        path: '/accounts/:region/:gameName/:tagLine',
         element: <AccountContent/>
       }, 
       {

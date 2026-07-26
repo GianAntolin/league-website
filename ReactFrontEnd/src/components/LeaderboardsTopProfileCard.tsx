@@ -55,7 +55,7 @@ function LeaderboardsTopProfileCard({data, tier, rank} : LeaderboardsTopProfileC
           <ProfileIcon url = {data.icon} level ={data.level}/>
         </div>
         <div className='leaderboards-top-profile-stats'>
-          <NavLink className = 'leaderboards-top-profile-name' to={`/account/${data.region}/${data.name}/${data.tag}`}> 
+          <NavLink className = 'leaderboards-top-profile-name' to={`/accounts/${data.region}/${data.name}/${data.tag}`}> 
             {data.name.toUpperCase()}
           </NavLink>
           <div className='tier-lp-wr'>

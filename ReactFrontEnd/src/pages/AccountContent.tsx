@@ -64,7 +64,7 @@ function AccountContent() {
 
   // If the params changed, make an API call
   useEffect( () =>{
-    const newUrl = `${baseURL}/api/account/${region}/${gameName}/${tagLine}`
+    const newUrl = `${baseURL}/api/accounts?region=${region}&name=${gameName}&tag=${tagLine}`
     setUrl(newUrl);
     document.title =`${gameName}#${tagLine}`
   },[region, gameName, tagLine])

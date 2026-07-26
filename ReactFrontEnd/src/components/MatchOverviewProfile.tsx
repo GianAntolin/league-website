@@ -49,7 +49,7 @@ function MatchOverviewProfile({data, highestDmg, gameDurationM, gameDurationS, r
                 </div>
             </div>
             <div className = 'overview-profile-name'>
-                <NavLink to= {`/account/${region}/${data.participantName}/${data.particpantTag}`}> {data.participantName} </NavLink>
+                <NavLink to= {`/accounts/${region}/${data.participantName}/${data.particpantTag}`}> {data.participantName} </NavLink>
             </div>
             <div className='overview-profile-kda'>
                 <KDA k={data.kills} d={data.deaths} a = {data.assists} size={'11px'}></KDA>

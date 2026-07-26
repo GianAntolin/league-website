@@ -14,7 +14,7 @@ interface TeamListProps{
  * Create a nav link using the participant's name and tag that'll path to the participant's match history
  */
 function TeamList({data, region} : TeamListProps) {
-    const navURL = `/account/${region}/${data.participantName}/${data.particpantTag}`    
+    const navURL = `/accounts/${region}/${data.participantName}/${data.particpantTag}`    
     return (
         <div className='participant'>
             <div className="participantchampionIcon">

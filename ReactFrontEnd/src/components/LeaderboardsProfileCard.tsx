@@ -28,7 +28,7 @@ function LeaderboardsProfileCard({data, tier, rank}:LeaderboardsProfileCardProps
                         <img className= 'leaderboards-profile-icon-img' src={data.icon}/>
                     </div>
                     <div className='leaderboards-profile-name'>
-                        <NavLink to={`/account/${data.region}/${data.name}/${data.tag}`}>
+                        <NavLink to={`/accounts/${data.region}/${data.name}/${data.tag}`}>
                             {data.name.toUpperCase()} 
                             
                         </NavLink> 
