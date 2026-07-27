@@ -4,3 +4,6 @@ venv/
 test/
 *.db
 .env*
+
+__pycache__/
+*.pyc
