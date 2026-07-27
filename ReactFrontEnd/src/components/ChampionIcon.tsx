@@ -1,4 +1,4 @@
-import '../css/championIcon.css'
+import './championIcon.css'
 
 interface ChampionIconProps{
     url: string;

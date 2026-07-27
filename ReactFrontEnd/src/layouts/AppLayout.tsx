@@ -2,7 +2,7 @@ import { Outlet, NavLink } from "react-router-dom";
 
 import SearchBar from "../components/SearchBar";
 
-import '../css/HomePage.css';
+import './AppLayout.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -23,7 +23,7 @@ export interface RegionsData{
  * Serves as the layout for the web browser. 
  * Dictates the outlet of children routes: /leaderboards, /account
  */
-function HomePage(){    
+function AppLayout(){    
     const regionTags = ['NA1', 'LA1', 'LA2', 'BR1', 'EUW1', 'EUN1', 'ME1', 'RU', 'TR1', 'JP1', 'KR', 'SG2', 'TW2', 'VN2', 'OC1']
     const regions = [ {value: 'NA1', label: 'NA', color: '#86858e', name: 'North America'}, 
                       {value: 'LA1', label: 'LAN', color: '#608806', name: 'Latin America North'}, 
@@ -65,4 +65,4 @@ function HomePage(){
     )
 }
 
-export default HomePage;
+export default AppLayout;

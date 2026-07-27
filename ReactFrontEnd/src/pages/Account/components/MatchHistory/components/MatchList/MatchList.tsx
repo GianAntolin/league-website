@@ -1,5 +1,5 @@
-import Match from "./Match"
-import { Matches } from "./MatchHistory"
+import { Matches } from "../../MatchHistory";
+import Match from "./components/Match/Match"
 
 interface MatchesProp{
     matches: Matches;

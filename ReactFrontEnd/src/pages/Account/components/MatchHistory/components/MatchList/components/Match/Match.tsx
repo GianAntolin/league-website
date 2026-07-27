@@ -1,13 +1,14 @@
-import '../css/Match.css'
-import ItemList from './ItemList'
-import ChampionIcon from './ChampionIcon'
-import KDA from './KDA'
+import './Match.css'
 
-import { MatchData} from './MatchHistory'
-import SummonerSpell from './SummonerSpell'
-import TeamList from './TeamList'
+
 import { useState } from 'react'
-import MatchOverview from './MatchOverview'
+import { MatchData } from '../../../../MatchHistory'
+import ChampionIcon from '../../../../../../../../components/ChampionIcon';
+import SummonerSpell from '../../../../../../../../components/SummonerSpell';
+import KDA from '../../../../../../../../components/KDA';
+import ItemList from '../../../../../../../../components/ItemList';
+import TeamList from '../../../../../../../../components/TeamList';
+import MatchOverview from './components/MatchOverview/MatchOverview';
 
 interface MatchProps{
     data: MatchData;

@@ -1,4 +1,4 @@
-import '../css/NoRecentMatches.css'
+import './NoRecentMatches.css'
 
 function NoRecentMatches() {
   return (

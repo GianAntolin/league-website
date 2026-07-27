@@ -1,4 +1,4 @@
-import '../css/SummonerSpell.css'
+import './SummonerSpell.css'
 
 interface SummonerSpellProps{
     url: string;

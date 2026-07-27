@@ -1,13 +1,14 @@
-import useFetch from "../hooks/useFetch";
-
-import '../css/MatchHistory.css'
+import './MatchHistory.css'
+import useFetch from '../../../../hooks/useFetch';
 import { useEffect, useMemo, useState } from "react";
-import ErrorPage from "../pages/ErrorPage";
-import MatchList from "./MatchList";
-import KDA from "./KDA";
-import NoRecentMatches from "./NoRecentMatches";
-import RecentGames from "./RecentGames";
-import WinRateArc from "./WinRateArc";
+
+
+import WinRateArc from '../../../../components/WinRateArc';
+import KDA from '../../../../components/KDA';
+import ErrorPage from '../../../Error/ErrorPage';
+import MatchList from './components/MatchList/MatchList';
+import RecentGames from './components/RecentGames';
+import NoRecentMatches from './components/NoRecentMatches';
 
 export interface ChampionItems{
   item0: string; 

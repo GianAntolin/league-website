@@ -1,4 +1,4 @@
-import '../css/KDA.css'
+import './KDA.css'
 
 interface KDAProps{
     k: number | string;

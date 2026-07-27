@@ -1,4 +1,4 @@
-import '../css/ErrorLeaderboards.css'
+import './ErrorLeaderboards.css'
 
 interface ErrorLeaderboardsProps{
     message: string

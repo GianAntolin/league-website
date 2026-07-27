@@ -1,10 +1,10 @@
 import { useContext, useEffect, useMemo } from 'react';
-import '../css/RecentGames.css'
-import useFetch from '../hooks/useFetch';
-import { RecentGamesData } from '../pages/AccountContent';
-import ChampionWithStats from './ChampionWithStats';
-import { Matches } from './MatchHistory';
-import { BackgroundImgContext } from '../context/BackgroundImgContext';
+import './RecentGames.css'
+import useFetch from '../../../../../hooks/useFetch';
+import { Matches } from '../MatchHistory';
+import { BackgroundImgContext } from '../../../../../context/BackgroundImgContext';
+import { RecentGamesData } from '../../../Account';
+import ChampionWithStats from '../../../../../components/ChampionWithStats';
 
 interface RecentGamesProps{
     PUUID: string;

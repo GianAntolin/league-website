@@ -1,10 +1,11 @@
 import { NavLink } from 'react-router-dom'
-import '../css/MatchOverviewProfile.css'
-import ItemList from './ItemList'
-import KDA from './KDA'
-import { Participant } from './MatchHistory'
-import SummonerSpell from './SummonerSpell'
-import WinRateBar from './WinRateBar'
+import './MatchOverviewProfile.css'
+import SummonerSpell from '../../../../../../../../../../../components/SummonerSpell';
+import KDA from '../../../../../../../../../../../components/KDA';
+import WinRateBar from '../../../../../../../../../../../components/WinRateBar';
+import ItemList from '../../../../../../../../../../../components/ItemList';
+import { Participant } from '../../../../../../../MatchHistory';
+
 
 interface MatchOverviewProfileProps{
     data: Participant;

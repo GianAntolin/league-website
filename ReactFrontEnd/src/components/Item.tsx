@@ -1,4 +1,4 @@
-import '../css/Item.css'
+import './Item.css'
 
 
 interface ItemProps{

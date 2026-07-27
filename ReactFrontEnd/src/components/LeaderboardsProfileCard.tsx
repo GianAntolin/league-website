@@ -1,7 +1,7 @@
-import { LeaderboardsProfile } from '../pages/Leaderboards'
-import '../css/LeaderboardsProfileCard.css'
+import './LeaderboardsProfileCard.css'
 import { NavLink } from 'react-router-dom'
 import WinRateBar from './WinRateBar'
+import { LeaderboardsProfile } from '../pages/Leaderboards/Leaderboards';
 
 interface LeaderboardsProfileCardProps{
   data: LeaderboardsProfile;

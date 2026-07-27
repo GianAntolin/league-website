@@ -1,8 +1,8 @@
-import ProfileIcon from "./ProfileIcon"
-import '../css/AccountHeader.css'
-import { SummonerData } from "../pages/AccountContent"
+import './AccountHeader.css'
+import ProfileIcon from '../../../components/ProfileIcon';
+import { BackgroundImgContext } from '../../../context/BackgroundImgContext';
 import { useContext } from "react";
-import { BackgroundImgContext } from "../context/BackgroundImgContext";
+import { SummonerData } from '../Account';
 
 interface AccountContentProps{
   summoner: SummonerData;

@@ -1,5 +1,5 @@
-import { ChampionsRecentGamesData } from "../pages/AccountContent"
-import '../css/ChampionWithStats.css'
+import './ChampionWithStats.css'
+import { ChampionsRecentGamesData } from '../pages/Account/Account';
 
 
 

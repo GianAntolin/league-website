@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import '../css/Error.css'
+import './Error.css'
 import { useEffect } from 'react'
 
 interface ErrorPageProps{

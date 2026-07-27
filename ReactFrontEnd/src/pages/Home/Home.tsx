@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import '../css/HomeContent.css'
+import './Home.css'
 
 // Display home page content
-function HomeContent() {
+function Home() {
   useEffect( () => {
     document.title = 'Home'
   },[])
@@ -18,4 +18,4 @@ function HomeContent() {
   )
 }
 
-export default HomeContent;
+export default Home;

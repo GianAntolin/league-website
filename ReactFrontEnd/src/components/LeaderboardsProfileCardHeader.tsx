@@ -1,4 +1,4 @@
-import '../css/LeaderboardsProfileCardHeader.css'
+import './LeaderboardsProfileCardHeader.css'
 
 
 // Creates a table header for the profiles

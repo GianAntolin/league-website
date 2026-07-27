@@ -1,24 +1,27 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
+import './index.css'
 
-import HomePage from './pages/HomePage.tsx'
-import Leaderboards from './pages/Leaderboards.tsx'
-import ErrorPage from './pages/ErrorPage.tsx'
-import AccountContent from './pages/AccountContent.tsx'
-import HomeContent from './pages/HomeContent.tsx'
+import AppLayout from './layouts/AppLayout.tsx'
+import Home from './pages/Home/Home.tsx'
+import Leaderboards from './pages/Leaderboards/Leaderboards.tsx'
+import Account from './pages/Account/Account.tsx'
+
+import ErrorPage from './pages/Error/ErrorPage.tsx'
+
 
 
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <HomePage/>,
+    element: <AppLayout/>,
     errorElement: <ErrorPage message={"Something went wrong..."} sendHome= {true}/>,
     children: [
       {
         path: '',
-        element: <HomeContent/>
+        element: <Home/>
       },
       {
         path: 'leaderboards',
@@ -26,7 +29,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/accounts/:region/:gameName/:tagLine',
-        element: <AccountContent/>
+        element: <Account/>
       }, 
       {
         path: '*',

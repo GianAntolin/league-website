@@ -1,8 +1,9 @@
 import { NavLink } from 'react-router-dom'
-import '../css/LeaderboardsTopProfileCard.css'
-import ProfileIcon from './ProfileIcon'
-import WinRateBar from './WinRateBar'
-import { LeaderboardsProfile } from '../pages/Leaderboards'
+import './LeaderboardsTopProfileCard.css'
+import { LeaderboardsProfile } from '../../../Leaderboards';
+import ProfileIcon from '../../../../../components/ProfileIcon';
+import WinRateBar from '../../../../../components/WinRateBar';
+
 
 interface LeaderboardsTopProfileCardProps{
   data: LeaderboardsProfile;

@@ -1,8 +1,9 @@
-import LeaderboardsTopProfileCard from './LeaderboardsTopProfileCard';
-import { LeaderboardsData } from '../pages/Leaderboards';
-import LeaderboardsProfileCard from './LeaderboardsProfileCard';
-import LeaderboardsProfileCardHeader from './LeaderboardsProfileCardHeader';
-import '../css/LeaderboardsMain.css'
+
+import './LeaderboardsMain.css'
+import { LeaderboardsData } from '../../Leaderboards';
+import LeaderboardsProfileCardHeader from '../../../../components/LeaderboardsProfileCardHeader';
+import LeaderboardsProfileCard from '../../../../components/LeaderboardsProfileCard';
+import LeaderboardsTopProfileCard from './components/LeaderboardsTopProfileCard';
 
 interface LeaderboardsMainProps{
     data: LeaderboardsData;

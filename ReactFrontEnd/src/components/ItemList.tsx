@@ -1,6 +1,6 @@
-import '../css/ItemList.css'
+import './ItemList.css'
+import { ChampionItems } from '../pages/Account/components/MatchHistory/MatchHistory';
 import Item from './Item'
-import { ChampionItems } from './MatchHistory'
 
 interface ItemListProps{
     items: ChampionItems;

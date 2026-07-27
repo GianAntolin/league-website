@@ -1,4 +1,4 @@
-import '../css/RankSummary.css'
+import './RankSummary.css'
 
 interface RankSummaryProps{
     tier: string;

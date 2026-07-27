@@ -1,9 +1,9 @@
 import { FormEvent, useState} from "react";
 import { useNavigate, NavLink } from 'react-router-dom';
-import '../css/SearchBar.css';
+import './SearchBar.css';
 import DropDown from "./DropDown";
-import { Regions } from "../pages/HomePage";
 import useFetch from "../hooks/useFetch";
+import { Regions } from "../layouts/AppLayout";
 
 
 interface SearchBarProps{
@@ -55,12 +55,10 @@ function SearchBar( {regions ,regionTags} : SearchBarProps){
          //match to 'gameName#tag' pattern
         let found = inputString.match(pattern);
         
-        console.log('on change: ', event.target.value)
 
          if (found){
             // Split the input
             let input = inputString.split('#');
-            console.log('found: ', input);
             let gameName = input[0].trim();
             let tagLine = input[1].trim();
             // Use the input as search query parameters for API calls
@@ -85,11 +83,9 @@ function SearchBar( {regions ,regionTags} : SearchBarProps){
         let inputString = accountIdentifier;
         // match to 'gameName#tag' pattern
         let found = inputString.match(pattern);
-        console.log('submit:', found)
         if (found){
             // Split the input
             let input = inputString.split('#');
-            console.log('submit:', input)
             let gameName = input[0].trim();
             let tagLine = input[1].trim();
             // Use the input as parameters to a route path

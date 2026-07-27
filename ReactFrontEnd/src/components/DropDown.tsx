@@ -1,5 +1,5 @@
-import '../css/DropDown.css'
-import { Regions } from '../pages/HomePage'
+import './DropDown.css'
+import { Regions } from '../layouts/AppLayout';
 
 interface DropdownProps{
     options: Array<Regions>;

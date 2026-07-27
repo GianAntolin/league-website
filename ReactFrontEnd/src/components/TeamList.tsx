@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom"
-import { Participant } from "./MatchHistory"
-import '../css/TeamList.css'
+import './TeamList.css'
+import { Participant } from "../pages/Account/components/MatchHistory/MatchHistory";
 
 interface TeamListProps{
     data : Participant;

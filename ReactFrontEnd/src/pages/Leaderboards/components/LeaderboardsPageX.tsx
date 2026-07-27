@@ -1,7 +1,9 @@
-import '../css/LeaderboardsPageX.css'
-import { LeaderboardsData } from '../pages/Leaderboards'
-import LeaderboardsProfileCardHeader from './LeaderboardsProfileCardHeader'
-import LeaderboardsProfileCard from './LeaderboardsProfileCard'
+
+import LeaderboardsProfileCard from '../../../components/LeaderboardsProfileCard';
+import LeaderboardsProfileCardHeader from '../../../components/LeaderboardsProfileCardHeader';
+import { LeaderboardsData } from '../Leaderboards';
+import './LeaderboardsPageX.css'
+
 
 
 interface LeaderboardsPageXProps{

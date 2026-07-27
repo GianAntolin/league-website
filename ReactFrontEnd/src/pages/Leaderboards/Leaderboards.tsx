@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
-import '../css/Leaderboards.css'
-import useFetch from '../hooks/useFetch';
+import './Leaderboards.css'
 import {useLocation, useNavigate, useOutletContext } from 'react-router-dom';
-import DropDown from '../components/DropDown';
-import LeaderboardsMain from '../components/LeaderboardsMain';
-import LeaderboardsPageX from '../components/LeaderboardsPageX';
-import ErrorLeaderboards from './ErrorLeaderboards';
-import { RegionsData } from './HomePage';
+import { RegionsData } from '../../layouts/AppLayout';
+import useFetch from '../../hooks/useFetch';
+import DropDown from '../../components/DropDown';
+import LeaderboardsMain from './components/LeaderboardsMain/LeaderboardsMain';
+import LeaderboardsPageX from './components/LeaderboardsPageX';
+import ErrorLeaderboards from '../Error/ErrorLeaderboards';
+
 
 export interface LeaderboardsProfile{
   icon: string;

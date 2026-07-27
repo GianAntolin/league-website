@@ -1,4 +1,4 @@
-import '../css/WinRateChart.css'
+import './WinRateChart.css'
 
 interface WinRateChartProps{
     radius: number;

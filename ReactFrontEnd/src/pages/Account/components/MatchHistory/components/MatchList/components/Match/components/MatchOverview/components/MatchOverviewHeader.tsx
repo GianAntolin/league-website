@@ -1,4 +1,4 @@
-import '../css/MatchOverviewHeader.css'
+import './MatchOverviewHeader.css'
 
 
 interface MatchOverviewHeaderProps{

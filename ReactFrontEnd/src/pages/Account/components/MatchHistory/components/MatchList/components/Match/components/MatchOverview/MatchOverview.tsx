@@ -1,7 +1,9 @@
-import '../css/MatchOverview.css'
-import { MatchData } from './MatchHistory'
-import MatchOverviewHeader from './MatchOverviewHeader';
-import MatchOverviewProfile from './MatchOverviewProfile'
+import './MatchOverview.css'
+
+import { MatchData } from '../../../../../../MatchHistory';
+import MatchOverviewHeader from './components/MatchOverviewHeader';
+import MatchOverviewProfile from './components/MatchOverviewProfile';
+
 
 interface MatchOverviewProps{
     data: MatchData;
