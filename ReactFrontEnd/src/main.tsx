@@ -4,11 +4,11 @@ import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import './index.css'
 
 import AppLayout from './layouts/AppLayout.tsx'
-import Home from './pages/Home/Home.tsx'
-import Leaderboards from './pages/Leaderboards/Leaderboards.tsx'
-import Account from './pages/Account/Account.tsx'
+import Home from './pages/Home.tsx'
+import Account from './pages/Account.tsx'
 
 import ErrorPage from './pages/Error/ErrorPage.tsx'
+import Leaderboards from './pages/Leaderboards.tsx'
 
 
 

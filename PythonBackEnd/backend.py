@@ -137,6 +137,7 @@ styleArena = [1700]
 # if account does not exist, insert the account to the database
 # if account does exist, but hasn't been updated in the last x minutes, update it
 def getSummoner(region, gameName, tagLine):
+    print('here')
     # Check the database if the account already exists
     update = False  
     with sqlite3.connect('website.db') as connection:
@@ -198,6 +199,7 @@ def getSummoner(region, gameName, tagLine):
         #Send a request for player's ranked information
         apiURL = routing[region.upper()]['platform'] + baseRiotAPI + baseLeagueRank + accountPUUID + "?" + apiKey
         response = requests.get(apiURL)
+        
         if not(response.ok):
             return response.reason, response.status_code
 
