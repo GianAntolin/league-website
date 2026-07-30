@@ -5,14 +5,8 @@ export type RegionsType = {
     name: string;
 }
 
-export type RegionsData = {
-    regions: Array<RegionsType>;
-    regionTags: Array<String>;
-}
-
-
 export const regionTags = ['NA1', 'LA1', 'LA2', 'BR1', 'EUW1', 'EUN1', 'ME1', 'RU', 'TR1', 'JP1', 'KR', 'SG2', 'TW2', 'VN2', 'OC1']
-export const regions = [ {value: 'NA1', label: 'NA', color: '#86858e', name: 'North America'}, 
+export const regions: RegionsType[] = [ {value: 'NA1', label: 'NA', color: '#86858e', name: 'North America'}, 
                   {value: 'LA1', label: 'LAN', color: '#608806', name: 'Latin America North'}, 
                   {value: 'LA2', label: 'LAS', color: '#D16BA5', name: 'Latin America South'}, 
                   {value: 'BR1', label: 'BR', color: '#86A8E7', name: 'Brazil'}, 

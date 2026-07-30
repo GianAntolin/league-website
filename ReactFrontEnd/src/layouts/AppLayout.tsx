@@ -6,19 +6,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import SearchBar from "@/features/account/components/SearchBar";
 
 
-// export interface Regions{
-//     value: string;
-//     label: string;
-//     color: string;
-//     name: string;
-// }
-
-// export interface RegionsData{
-//     regions: Array<Regions>;
-//     regionTags: Array<String>;
-// }
-
-
 /**
  * Serves as the layout for the web browser. 
  * Dictates the outlet of children routes: /leaderboards, /account

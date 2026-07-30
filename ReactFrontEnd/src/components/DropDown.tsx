@@ -1,8 +1,8 @@
+import { RegionsType } from '@/constants/regions';
 import './DropDown.css'
-import { Regions } from '../layouts/AppLayout';
 
 interface DropdownProps{
-    options: Array<Regions>;
+    options: Array<RegionsType>;
     handleSelected: (value: any) => void;
 }
 
