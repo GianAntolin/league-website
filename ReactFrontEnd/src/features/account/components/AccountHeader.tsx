@@ -1,8 +1,7 @@
 import './AccountHeader.css'
-import ProfileIcon from '../../../components/ProfileIcon';
-import { BackgroundImgContext } from '../../../context/BackgroundImgContext';
-import { useContext } from "react";
 import { SummonerData } from '../type';
+import ProfileIcon from '@/components/ProfileIcon';
+import { useBackGroundImg } from '@/context/BackgroundImgContext';
 
 interface AccountContentProps{
   summoner: SummonerData;
@@ -13,9 +12,10 @@ interface AccountContentProps{
 function AccountHeader({summoner} : AccountContentProps) {
   const name = summoner.name.toUpperCase();
   const tag = summoner.tag.toUpperCase();
-  const {profileBackgroundImg} = useContext(BackgroundImgContext)
+  const {profileBackgroundImg} = useBackGroundImg()
+
   return (
-    <div className = 'account-header'
+    <div className = 'account-header' 
         style={{backgroundImage: `linear-gradient(to right,#070720, 20%, rgba(240, 240, 240, 0), 80%, #070720),
                                   linear-gradient(to top,#070720, 25%, rgba(240, 240, 240, 0), 90%, #070720),
                                   url(${profileBackgroundImg})`}}>

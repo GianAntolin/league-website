@@ -1,9 +1,9 @@
-import { useContext, useEffect, useMemo } from 'react';
+import {useEffect, useMemo } from 'react';
 import './RecentGames.css'
 import useFetch from '@/hooks/useFetch';
-import { BackgroundImgContext } from '@/context/BackgroundImgContext';
 import { Matches, RecentGamesData } from '@/features/account/type';
 import ChampionWithStats from './components/ChampionWithStats';
+import { useBackGroundImg } from '@/context/BackgroundImgContext';
 
 
 interface RecentGamesProps{
@@ -19,7 +19,7 @@ function RecentGames({PUUID, region, matches} : RecentGamesProps) {
     const end = matchList[0]['gameEndTimestampUnix']
     // API call to fetch recent games data
     const {data, isPending, error} = useFetch<RecentGamesData>(`${baseURL}/api/${region}/${PUUID}/${start}/${end}`)
-    const {setProfileBackgroundImg} = useContext(BackgroundImgContext)
+    const {setProfileBackgroundImg} = useBackGroundImg()
     const memoData = useMemo ( () => data, [JSON.stringify(data)])
     useEffect( () => {
         if (data) {

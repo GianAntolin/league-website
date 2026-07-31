@@ -1,10 +1,17 @@
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useContext, useState } from "react";
 
 interface backgroundImgContextProviderProps{
     children: ReactNode
 }
 
-export const BackgroundImgContext = createContext<null | any>(null)
+type BackgroundImgContextType = {
+    profileBackgroundImg: string, 
+    setProfileBackgroundImg: React.Dispatch<React.SetStateAction<string>>
+}
+
+
+
+const BackgroundImgContext = createContext<BackgroundImgContextType | null>(null)
 
 // Create a context provider for a background image for the account content header
 function BackgroundImgContextProvider({children} : backgroundImgContextProviderProps){
@@ -19,3 +26,13 @@ function BackgroundImgContextProvider({children} : backgroundImgContextProviderP
 }
 
 export default BackgroundImgContextProvider;
+
+export function useBackGroundImg(){
+    const context = useContext(BackgroundImgContext)
+    if (!context) {
+        throw new Error('Missing Provider')
+    }
+
+    return context
+
+}
