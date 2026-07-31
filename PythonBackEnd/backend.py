@@ -194,7 +194,7 @@ def getSummoner(region, gameName, tagLine):
             'icon': profileImgURL,
             'updatedAT': summonerProfile['revisionDate']
         }
-        
+
         #Send a request for player's ranked information
         apiURL = routing[region.upper()]['platform'] + baseRiotAPI + baseLeagueRank + accountPUUID + "?" + apiKey
         response = requests.get(apiURL)
@@ -227,9 +227,14 @@ def getSummoner(region, gameName, tagLine):
                 rankFlex = True
 
         with sqlite3.connect('website.db') as connection:
+            connection.row_factory = sqlite3.Row
             cursor = connection.cursor()
+            # Check if the PUUID already exists
+            cursor.execute("SELECT * FROM accounts WHERE PUUID = :PUUID AND region = :region ", profile)
+            rows = cursor.fetchone()
+            
             # Insert/update the account to the accounts table 
-            if update: 
+            if update or rows:
                 cursor.execute("""UPDATE accounts SET 
                             PUUID = :PUUID, name = :name, 
                             tag = :tag, region = :region, 

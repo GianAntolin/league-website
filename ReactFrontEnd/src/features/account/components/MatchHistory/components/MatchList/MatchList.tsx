@@ -1,4 +1,4 @@
-import { Matches } from "../../MatchHistory";
+import { Matches } from "@/features/account/type";
 import Match from "./components/Match/Match"
 
 interface MatchesProp{

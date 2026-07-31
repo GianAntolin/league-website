@@ -177,7 +177,6 @@ def account():
     region = request.args.get('region')
     gameName = request.args.get('name')
     tagLine = request.args.get('tag')
-    puuid = request.args.get('puuid')
 
     with sqlite3.connect('website.db') as connection:
         connection.row_factory = sqlite3.Row

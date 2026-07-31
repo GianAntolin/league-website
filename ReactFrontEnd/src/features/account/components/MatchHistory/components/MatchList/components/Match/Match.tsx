@@ -2,13 +2,14 @@ import './Match.css'
 
 
 import { useState } from 'react'
-import ChampionIcon from '../../../../../../../../components/ChampionIcon';
-import SummonerSpell from '../../../../../../../../components/SummonerSpell';
-import KDA from '../../../../../../../../components/KDA';
+
 import MatchOverview from './components/MatchOverview/MatchOverview';
 import { MatchData } from '@/features/account/type';
 import ItemList from './components/ItemList';
 import TeamList from './components/TeamList';
+import ChampionIcon from '@/components/ChampionIcon';
+import SummonerSpell from '@/components/SummonerSpell';
+import KDA from '@/components/KDA';
 
 interface MatchProps{
     data: MatchData;
