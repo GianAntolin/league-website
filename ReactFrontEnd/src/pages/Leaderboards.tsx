@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './Leaderboards.css'
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 import LeaderboardTable from '@/features/leaderboards/components/LeaderboardTable/LeaderboardTable';
 import DropDown from '@/components/DropDown';
@@ -26,7 +26,6 @@ import { useGetLeaderboards } from '@/features/leaderboards/api/fetchLeaderboard
 
 function Leaderboards() {
 
-  const navigate = useNavigate()
 
   // pattern for numbers
   const pattern = /^\s*[0-9]+\s*$/
@@ -43,17 +42,25 @@ function Leaderboards() {
   // const {data, isPending, error} = useFetch<LeaderboardsData>(url);
 
   // Navigation web buttons
-  const [pageButtons, setPageButtons] = useState<Array<number>>([1,2,3,4,5,6,7,8,9])
+  const [pageButtons, setPageButtons] = useState<Array<number>>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
   // Controls if the drop down is hidden or visible 
   const [toggleOptions, setToggleOptions] = useState(false);
 
   // get query parameters
-  const location = useLocation();
-  const queryParameters = new URLSearchParams(location.search);
-  const region = queryParameters.get('region') ?? 'na1';
-  const queue = queryParameters.get('queue') ?? 'solo'
-  const tempPage = queryParameters.get('page') ?? '1'
+
+  // const location = useLocation();
+  // const queryParameters = new URLSearchParams(location.search);
+  // const region = queryParameters.get('region') ?? 'na1';
+  // const queue = queryParameters.get('queue') ?? 'solo'
+  // const tempPage = queryParameters.get('page') ?? '1'
+  // const page = tempPage.trim().match(pattern) ? tempPage : '1'
+
+  const [params, setParams] = useSearchParams()
+  const region = params.get('region') ?? 'na1';
+  const queue = params.get('queue') ?? 'solo'
+  const tempPage = params.get('page') ?? '1'
   const page = tempPage.trim().match(pattern) ? tempPage : '1'
+
 
   const { data, isLoading: isPending, isError, error } = useGetLeaderboards({ region, page, queue })
 
@@ -62,34 +69,25 @@ function Leaderboards() {
     return Array.from({ length: end - start + 1 }, (_, index) => start + index)
   }
 
-  // Update the query parameters based user input (ranked solo/ranked flex) and reset the page paramete
+  // Update the query parameters based user input (ranked solo/ranked flex) and reset the page parameter
   const handleQueueButton = (queue: string) => {
     setQueue(queue)
-    const updateParams = new URLSearchParams(location.search);
-
-    if (queueType) {
-      updateParams.set('queue', queue)
-    } else {
-      updateParams.append('queue', queue)
-    }
-
-    updateParams.delete('page')
-
-    navigate({ pathname: location.pathname, search: updateParams.toString() })
+    setParams((prev) => {
+      prev.set('queue', queue)
+      prev.delete('page')
+      return prev
+    })
   }
 
   // Update the query parameters based user input (regions) and reset the page parameter
   const handleRegionButton = (region: string) => {
     setSelected(region)
     setToggleOptions(false);
-    const updatedParams = new URLSearchParams(location.search)
-    if (selected) {
-      updatedParams.set('region', region)
-    } else {
-      updatedParams.append('region', region)
-    }
-    updatedParams.delete('page')
-    navigate({ pathname: location.pathname, search: updatedParams.toString() })
+    setParams((prev) => {
+      prev.set('region', region)
+      prev.delete('page')
+      return prev
+    })
 
   }
 
@@ -98,7 +96,7 @@ function Leaderboards() {
 
     if (regionTags.includes(region.trim().toUpperCase())) {
       if (region != selected) setSelected(region.trim().toLowerCase())
-    } 
+    }
 
 
     if (queue === 'flex' || queue === 'solo') {
@@ -113,39 +111,41 @@ function Leaderboards() {
   // Update the web navigation buttons according to the page number
   useEffect(() => {
     // Checking edge cases
-    if (data === undefined) return setPageButtons([1,2,3,4,5,6,7,8,9]);
+    if (data === undefined) return setPageButtons([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
     // page can be null or an empty string set the page to 1
-    let currPage;
-    if (!page.match(pattern)) {
-      currPage = 1;
-    } else {
-      currPage = parseInt(page);
+    const currPage = parseInt(page);
+    console.log('@ changing buttons, currPage:  ', currPage, ' maxPages: ', data.maxPages, 'pageButtons: ', pageButtons)
 
-    }
-
-
-    // curr page exceed the maximum number of pages
-    if (currPage > data.maxPages) return;
-
-    else {
-      // prevent the page numbers from going below 1 
-      if (currPage > 3) {
-        // prevent the page numberes from going above the max pages
-        if (currPage + 5 > data.maxPages) {
-          setPageButtons(rangeLoop(data.maxPages - 8, data.maxPages));
-        } else {
-          setPageButtons(rangeLoop(currPage - 3, currPage + 5));
-        }
-      } else {
-        if (currPage + 5 > data.maxPages) {
-          setPageButtons(rangeLoop(1, data.maxPages));
-        } else {
-          // Theres at least 9 buttons unless the max page is less than 9
-          if (data.maxPages > 9) setPageButtons(rangeLoop(1, 9));
-          else setPageButtons(rangeLoop(1, data.maxPages));
+    if (data.maxPages > 10) {
+      if (currPage > pageButtons[9]) {
+        console.log('pageButton[9]: ', pageButtons[9])
+        // Prevent buttons from going over the maxPages
+        if (currPage < data.maxPages) {
+          // Check if there's enough pages for 10 buttons
+          if ((Math.floor(currPage / 10) + 1) * 10 < data.maxPages) {
+            setPageButtons(rangeLoop((Math.floor(currPage / 10) * 10) + 1, (Math.floor(currPage / 10) + 1) * 10))
+          } else {
+            setPageButtons(rangeLoop((Math.floor(currPage / 10) * 10) + 1, data.maxPages))
+          }
         }
       }
+
+      if (currPage < pageButtons[0]) {
+        if (currPage < 1) {
+          setPageButtons(rangeLoop(1, data.maxPages))
+        } else {
+          const temp = (Math.floor(currPage / 10) - 1) * 10
+          const start = temp === 0 ? 1 : temp
+          setPageButtons(rangeLoop(start, Math.floor(currPage / 10) * 10))
+
+        }
+      }
+
+    } else {
+      setPageButtons(rangeLoop(1,data.maxPages))
     }
+
+
 
   }, [data])
 

@@ -27,6 +27,9 @@
     "paths": {
       "@/*": ["src/*"]
     },
+
+    /* Testing */ 
+    "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom"]
   },
   "include": ["src"]
 }

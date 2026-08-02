@@ -279,8 +279,6 @@ def getLeaderboards():
     queue = request.args.get('queue')
     start = request.args.get('start')
     end = request.args.get('end')
-    print('here')
-    print(region,queue, start, end)
     leaderboards = backend.getLeaderboards(region, queue, start, end)
     data = leaderboards[0]
     status_code = leaderboards[1]
