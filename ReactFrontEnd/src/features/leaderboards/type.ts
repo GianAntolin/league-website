@@ -18,3 +18,9 @@ export type LeaderboardsData = {
     tier: string;
     maxPages: number;
 }
+
+export type LeaderboardsFilter = {
+    region: string | null,
+    queue: string | null, 
+    page: string | null
+}

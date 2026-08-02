@@ -273,9 +273,15 @@ def matchList(region, id, start, count):
     return jsonify(data), status_code
 
 # Get the current leaderboard rankings
-@app.route('/api/leaderboards/<region>/<type>/<start>/<end>', methods = ['GET'])
-def getLeaderboards(region, type, start, end):
-    leaderboards = backend.getLeaderboards(region, type, start, end)
+@app.route('/api/leaderboards', methods = ['GET'])
+def getLeaderboards():
+    region = request.args.get('region')
+    queue = request.args.get('queue')
+    start = request.args.get('start')
+    end = request.args.get('end')
+    print('here')
+    print(region,queue, start, end)
+    leaderboards = backend.getLeaderboards(region, queue, start, end)
     data = leaderboards[0]
     status_code = leaderboards[1]
     return jsonify(data), status_code

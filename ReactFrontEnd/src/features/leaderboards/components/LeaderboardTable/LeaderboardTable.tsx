@@ -8,8 +8,8 @@ import LeaderboardsPageX from "./components/LeaderboardsPageX";
 interface LeaderboardsProps {
     data: LeaderboardsData,
     isPending: boolean,
-    page: string | null,
-    pageButtons: number[] | null
+    page: string,
+    pageButtons: number[]
 }
 
 function LeaderboardTable({ data, isPending, page, pageButtons }: LeaderboardsProps) {

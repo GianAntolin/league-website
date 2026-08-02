@@ -545,10 +545,10 @@ def getLeaderboards(region, type, start, end):
     if region.upper() not in routing.keys():
         return 'Region not found',404
     
-    if type == 'solo':
-        queueType = 'RANKED_SOLO_5x5'
-    else: 
+    if type == 'flex':
         queueType = 'RANKED_FLEX_SR'
+    else: 
+        queueType = 'RANKED_SOLO_5x5'
 
     apiURL = routing[region.upper()]['platform'] + baseRiotAPI + baseChallengerQueue + queueType + '?' + apiKey
     response = requests.get(apiURL)
