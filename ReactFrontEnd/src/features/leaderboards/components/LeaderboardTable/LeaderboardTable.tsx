@@ -7,24 +7,16 @@ import LeaderboardsPageX from "./components/LeaderboardsPageX";
 
 interface LeaderboardsProps {
     data: LeaderboardsData,
-    isPending: boolean,
     page: string,
     pageButtons: number[]
 }
 
-function LeaderboardTable({ data, isPending, page, pageButtons }: LeaderboardsProps) {
+function LeaderboardTable({ data, page, pageButtons }: LeaderboardsProps) {
     const [, setParams] = useSearchParams()
 
     return (
         <div className='leaderboards-content'>
-            {isPending &&
-                <div className='pending'>
-                    <div className="spinner-border text-secondary" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </div>
-
-                </div>}
-            {!isPending && <div className='leaderboards-outlet'>
+            <div className='leaderboards-outlet'>
                 {(page === '' || page === '1') && <LeaderboardsMain data={data} />}
                 {page !== '' && parseInt(page) > 1 && <LeaderboardsPageX data={data} />}
 
@@ -79,7 +71,7 @@ function LeaderboardTable({ data, isPending, page, pageButtons }: LeaderboardsPr
                         Next </button>
                 </div>}
             </div>
-            }
+
         </div>
 
 

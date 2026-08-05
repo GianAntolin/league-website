@@ -58,12 +58,12 @@ def timeElapsed(time2):
 #Get account suggestions based on user input
 @app.route('/api/search', methods = ['GET'])
 def getAccountSuggestions():
-    region = request.args.get('region')
-    name = request.args.get('name')
+    region = request.args.get('region').strip()
+    name = request.args.get('name').strip()
     # If no name is provided, return None. 
     if name == '':
         return jsonify(None)
-    tag = request.args.get('tag')
+    tag = request.args.get('tag').strip()
 
     with sqlite3.connect('website.db') as connection:
         connection.row_factory = sqlite3.Row
@@ -123,8 +123,12 @@ def getAccountSuggestions():
     return jsonify(data) if len(data) != 0 else jsonify(None)
 
 # Get data from matches between two time stamps (start - end)
-@app.route('/api/<region>/<PUUID>/<start>/<end>', methods = ['GET'])
-def recentGamesData(region, PUUID, start, end):
+@app.route('/api', methods = ['GET'])
+def recentGamesData():
+    region = request.args.get('region').strip()
+    PUUID = request.args.get('PUUID').strip()
+    start = request.args.get('start')
+    end = request.args.get('end')
     with sqlite3.connect('website.db') as connection:
         connection.row_factory = sqlite3.Row
         cursor = connection.cursor()
@@ -174,9 +178,9 @@ def recentGamesData(region, PUUID, start, end):
 # If so, insert/update the account to the database
 @app.route('/api/accounts', methods=['GET'])
 def account(): 
-    region = request.args.get('region')
-    gameName = request.args.get('name')
-    tagLine = request.args.get('tag')
+    region = request.args.get('region').strip()
+    gameName = request.args.get('name').strip()
+    tagLine = request.args.get('tag').strip()
 
     with sqlite3.connect('website.db') as connection:
         connection.row_factory = sqlite3.Row
@@ -195,14 +199,19 @@ def account():
     connection.close()
     return jsonify(data), status_code
 
-#Insert matches to the database based on the user's region, id.
-@app.route('/api/matchlist/<region>/<id>/<start>/<count>', methods = ['GET'])
-def matchList(region, id, start, count):
+#Insert matches to the database based on the user's region, PUUID.
+@app.route('/api/matchlist', methods = ['GET'])
+def matchList():
+    region = request.args.get('region').strip()
+    PUUID = request.args.get('PUUID').strip()
+    start = request.args.get('start').strip()
+    count = request.args.get('count').strip()
+
     with sqlite3.connect('website.db') as connection: 
         connection.row_factory = sqlite3.Row
         cursor = connection.cursor()
         # insert matches if applicable
-        response = backend.matchList(region, id, start, count)
+        response = backend.matchList(region, PUUID, start, count)
         status_code = response[1]
         command = "SELECT * FROM matches WHERE matchID IN ({}) ORDER BY gameEndTimestamp DESC".format(','.join(len(response[0]['matches']) * '?'))
         # Get matches from the database
@@ -241,7 +250,7 @@ def matchList(region, id, start, count):
             participants = [dict(row) for row in participantsDataRows]
             matchData['participants'] = {}
             for index, participant in enumerate(participants, start = 0):
-                if participant['PUUID'] == id: 
+                if participant['PUUID'] == PUUID: 
                     matchData['mainParticipant'] = str(index)
                     matchData['win'] = True if participant['win'] else False
                 # Get all the items for the participant
@@ -251,8 +260,8 @@ def matchList(region, id, start, count):
                 itemData = dict(cursor.fetchone())
                 participant.update({'items' : itemData})
                 matchData['participants'][f'{index}'] = participant
-            # Get kills, deaths, assists, and wins from the participant that matches the id parameter
-            cursor.execute("SELECT kills, deaths, assists, win FROM participants WHERE matchID = :matchID AND region = :region COLLATE NOCASE AND PUUID = :PUUID" , {'matchID': match['matchID'], 'region': match['region'], 'PUUID': id})
+            # Get kills, deaths, assists, and wins from the participant that matches the PUUID parameter
+            cursor.execute("SELECT kills, deaths, assists, win FROM participants WHERE matchID = :matchID AND region = :region COLLATE NOCASE AND PUUID = :PUUID" , {'matchID': match['matchID'], 'region': match['region'], 'PUUID': PUUID})
             rows = cursor.fetchall()
             participantKDA= [dict(row) for row in rows]
             for i in participantKDA:
@@ -275,10 +284,10 @@ def matchList(region, id, start, count):
 # Get the current leaderboard rankings
 @app.route('/api/leaderboards', methods = ['GET'])
 def getLeaderboards():
-    region = request.args.get('region')
-    queue = request.args.get('queue')
-    start = request.args.get('start')
-    end = request.args.get('end')
+    region = request.args.get('region').strip()
+    queue = request.args.get('queue').strip()
+    start = request.args.get('start').strip()
+    end = request.args.get('end').strip()
     leaderboards = backend.getLeaderboards(region, queue, start, end)
     data = leaderboards[0]
     status_code = leaderboards[1]

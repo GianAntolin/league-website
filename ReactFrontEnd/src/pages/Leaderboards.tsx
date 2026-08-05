@@ -34,11 +34,6 @@ function Leaderboards() {
   // Queue type
   const [queueType, setQueue] = useState<string>('solo');
 
-  // API endpoint
-  // const [url, setURL] = useState<string>('');
-  // API call for ranking data
-  // const {data, isPending, error} = useFetch<LeaderboardsData>(url);
-
   // Navigation web buttons
   const [pageButtons, setPageButtons] = useState<Array<number>>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
   // Controls if the drop down is hidden or visible 
@@ -52,7 +47,7 @@ function Leaderboards() {
   const page = tempPage.trim().match(pattern) ? tempPage : '1'
 
 
-  const { data, isLoading: isPending, isError, error } = useGetLeaderboards({ region, page, queue })
+  const { data, isLoading , isError, error } = useGetLeaderboards({ region, page, queue })
 
 
   const rangeLoop = (start: number, end: number) => {
@@ -81,7 +76,6 @@ function Leaderboards() {
 
   }
 
-  // Error Handling: wrong parameters and missings parameters
   useEffect(() => {
 
     if (regionTags.includes(region.trim().toUpperCase())) {
@@ -100,9 +94,7 @@ function Leaderboards() {
 
   // Update the web navigation buttons according to the page number
   useEffect(() => {
-    // Checking edge cases
     if (data === undefined) return setPageButtons([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-    // page can be null or an empty string set the page to 1
     const currPage = parseInt(page);
 
     if (data.maxPages > 10) {
@@ -186,7 +178,7 @@ function Leaderboards() {
           </div>
         </div>
       </div>
-      {!data && isPending &&
+      {!data && isLoading &&
         <div className='pending'>
           <div className="spinner-border text-secondary" role="status">
             <span className="visually-hidden">Loading...</span>
@@ -196,8 +188,8 @@ function Leaderboards() {
 
       }
 
-      {data && <LeaderboardTable data={data} isPending={isPending} page={page} pageButtons={pageButtons} />}
-      {isError && !data && !isPending && <ErrorLeaderboards message={`${error.response?.data}`} />}
+      {data && <LeaderboardTable data={data} page={page} pageButtons={pageButtons} />}
+      {isError && <ErrorLeaderboards message={`${error.response?.data}`} />}
     </div>
   )
 }

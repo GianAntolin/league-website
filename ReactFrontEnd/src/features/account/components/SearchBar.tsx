@@ -2,8 +2,8 @@ import { FormEvent, useState } from "react";
 import { useNavigate, NavLink } from 'react-router-dom';
 import './SearchBar.css';
 import DropDown from "@/components/DropDown";
-import useFetch from "@/hooks/useFetch";
 import { regions, regionTags} from "@/constants/regions";
+import { useGetSearchAccount } from "../api/fetchSearchAccount";
 
 
 interface UserSearchSuggestions {
@@ -23,7 +23,6 @@ type SearchSuggestions = UserSearchSuggestions[];
  * Autocomplete search bar with a toggelable drop down list 
  */
 function SearchBar() {
-    const baseURL = 'http://127.0.0.1:5000/api/search';
 
     // Keep tracks of the input of the search bar
     const [accountIdentifier, setaccountIdentifier] = useState('');
@@ -32,9 +31,7 @@ function SearchBar() {
     const [toggleOptions, setToggleOptions] = useState(false);
     // Regular Expression for gameName#tag
     const pattern = /[\s]*[\w\s]+#[\s]*[\w]+[\s]*/g;
-    // Abort Controller for HTTPS request for account suggestions
-    const [url, setUrl] = useState<string>('');
-    const { data } = useFetch<SearchSuggestions>(url)
+    const { data } = useGetSearchAccount<SearchSuggestions>({region: selected, name: accountIdentifier})
 
     const handleSelected = (value: any) => {
         setSelected(value);
@@ -44,32 +41,6 @@ function SearchBar() {
     // When the input changes, set the accountIdentifier to new value and make an API call to get account suggestions
     const handleOnChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         setaccountIdentifier(event.target.value)
-
-        // Use the most updated value
-        let inputString = event.target.value;
-        //match to 'gameName#tag' pattern
-        let found = inputString.match(pattern);
-
-
-        if (found) {
-            // Split the input
-            let input = inputString.split('#');
-            let gameName = input[0].trim();
-            let tagLine = input[1].trim();
-            // Use the input as search query parameters for API calls
-            setUrl(baseURL + '?region=' + selected + '&name=' + gameName + '&tag=' + tagLine);
-
-
-        } else {
-            // Split the input
-            let input = inputString.split('#');
-            let gameName = input[0].trim();
-            let tag = input.length > 1 ? input[1].trim() : '';
-            // Use the input as search query parameters for API calls
-            setUrl(baseURL + '?region=' + selected + '&name=' + gameName + '&tag=' + tag);
-
-        }
-
     }
 
     // Handles the submit and navigates to a url based on the input

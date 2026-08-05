@@ -6,7 +6,7 @@ import { regionTags } from "@/constants/regions";
 
 export function useGetLeaderboards(filters: LeaderboardsFilter) {
     return useQuery<LeaderboardsData, AxiosError<string>>({
-        queryKey: ['leaderboards', filters],
+        queryKey: ['/leaderboards', filters],
         queryFn: () => fetchLeaderboards(filters)
     })
 
