@@ -6,7 +6,7 @@ interface ErrorLeaderboardsProps{
 
 function ErrorLeaderboards({message}: ErrorLeaderboardsProps) {
     return (
-        <div className='message'>
+        <div className='message' data-testid='error-leaderboards-message'>
             {message}
         </div>
     )

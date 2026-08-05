@@ -46,7 +46,7 @@ function LeaderboardsTopProfileCard({data, tier, rank} : LeaderboardsTopProfileC
   const winrate = ((data.wins)/(data.wins+data.losses))* 100
 
   return (
-    <div className='leaderboards-top-section' >
+    <div className='leaderboards-top-section' data-testid ='leaderboards-top-section'>
         <div className='leaderboards-top-profile'>
             <div className='box-rank' style={{color: color, backgroundColor: backGroundColor, borderColor: borderColor}}>
               {rank}

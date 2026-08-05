@@ -1,15 +1,31 @@
 export type LeaderboardsProfile = {
-    icon: string;
-    PUUID: string;
-    lp: number;
-    wins: number;
-    losses: number;
-    level: number;
-    name: string;
-    tag: string;
-    region: string;
+    PUUID: string,
+    icon: string,
+    level: number,
+    losses: number,
+    lp: number,
+    name: string,
+    rank: string,
+    rankFlexTier: string,
+    rankFlexLP: number | null,
+    rankFlexLosses: number | null,
+    rankFlexRank: string | null,
+    rankFlexTierImg: string | null,
+    rankFlexWins: number | null,
+    rankSoloTier: string,
+    rankSoloLP: number | null,
+    rankSoloLosses: number | null,
+    rankSoloRank: string | null,
+    rankSoloTierImg: string | null,
+    rankSoloWins: number | null,
+    region: string,
+    tag: string,
+    tier: string,
+    tierImg: string,
+    updatedAT: number,
+    wins: number
 }
-export type LeaderboardsProfiles ={
+export type LeaderboardsProfiles = {
     [key: string]: LeaderboardsProfile;
 }
 
@@ -20,7 +36,7 @@ export type LeaderboardsData = {
 }
 
 export type LeaderboardsFilter = {
-    region: string | null,
-    queue: string | null, 
-    page: string | null
+    region: string,
+    queue: string,
+    page: string
 }

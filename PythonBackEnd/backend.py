@@ -585,46 +585,74 @@ def getLeaderboardsProfile(region, data, start, end, queueType):
     # iterate through all the accounts
     
 
+    with open('test.txt', 'w') as f: 
+        for index, user in enumerate(data['entries'][start:end], start = start+1):
+            profile = {}
+            profile['tier'] =  data['tier']
+            profile['tierImg'] = 'http://127.0.0.1:5000/static/images/RankedEmblems/' + data['tier'].capitalize() + '.png'
+            profile['PUUID'] = user['puuid']
+            profile['rank'] = user['rank']
+            profile['lp'] = user['leaguePoints']
+            profile['wins'] = user['wins']
+            profile['losses'] = user['losses']
+            profile['region'] = region.upper()
 
-    for index, user in enumerate(data['entries'][start:end], start = start+1):
-        profile = {}
-        profile['tier'] =  data['tier']
-        profile['tierImg'] = 'http://127.0.0.1:5000/static/images/RankedEmblems/' + data['tier'].capitalize() + '.png'
-        profile['PUUID'] = user['puuid']
-        profile['rank'] = user['rank']
-        profile['lp'] = user['leaguePoints']
-        profile['wins'] = user['wins']
-        profile['losses'] = user['losses']
-        profile['region'] = region.upper()
-        
+            print('----------------initial profile--------------', file=f)
+            print(profile, file=f)
 
-        with sqlite3.connect('website.db') as connection: 
-            connection.row_factory = sqlite3.Row
-            cursor = connection.cursor()
-            cursor.execute("SELECT * FROM accounts where PUUID = :PUUID", {'PUUID': user['puuid']})
-            # Check if the account exists on the database
-            accountsFetch = cursor.fetchone()
-            
-            
-            summonerAPI = routing[region.upper()]['platform'] + baseRiotAPI + baseSummonerURL + user['puuid'] + "?" + apiKey
-            summonerData = requests.get(summonerAPI)
-            if not(summonerData.ok):
-                return summonerData.reason , summonerData.status_code
-            summonerProfile = summonerData.json()
+            with sqlite3.connect('website.db') as connection: 
+                connection.row_factory = sqlite3.Row
+                cursor = connection.cursor()
+                cursor.execute("SELECT * FROM accounts where PUUID = :PUUID", {'PUUID': user['puuid']})
+                # Check if the account exists on the database
+                accountsFetch = cursor.fetchone()
+                
+                
+                summonerAPI = routing[region.upper()]['platform'] + baseRiotAPI + baseSummonerURL + user['puuid'] + "?" + apiKey
+                summonerData = requests.get(summonerAPI)
+                if not(summonerData.ok):
+                    return summonerData.reason , summonerData.status_code
+                summonerProfile = summonerData.json()
 
-            # If puuid is in database, 
-            if accountsFetch:
-                # check if the revision date matches 
-                if (summonerProfile['revisionDate'] == accountsFetch['updatedAT']):
-                    profile.update(dict(accountsFetch))
-                else: 
-                    #if not, update the database
+                # If puuid is in database, 
+                if accountsFetch:
+                    # check if the revision date matches 
+
+                    print('Riot RevisionDate: {} DB revisionDate: {}'.format(summonerProfile['revisionDate'], accountsFetch['updatedAT']) , file = f)
+
+                    if (summonerProfile['revisionDate'] == accountsFetch['updatedAT']):
+                        profile.update(dict(accountsFetch))
+                    else: 
+                        #if not, update the database
+                        profileImgURL = ddragonBaseURL + 'img/profileicon/' + str(summonerProfile['profileIconId']) +'.png'
+                        profile.update({
+                        'level' : summonerProfile['summonerLevel'],
+                        'icon': profileImgURL,
+                        'updatedAT':summonerProfile['revisionDate']
+                        })
+                        accountAPI = routing[region.upper()]['region'] + baseRiotAPI + baseAccountRiotPUUID+ user['puuid'] + '?' + apiKey
+                        accountResponse= requests.get(accountAPI)
+                        if not(accountResponse.ok):
+                            return accountResponse.reason, accountResponse.status_code
+                        accountData = accountResponse.json()
+                        profile['name'] = accountData['gameName']
+                        profile['tag'] = accountData['tagLine']
+
+                        cursor.execute("""UPDATE accounts SET 
+                                    name = :name, tag = :tag, region = :region, 
+                                    level = :level, icon = :icon, updatedAT = :updatedAT 
+                                    WHERE PUUID = :PUUID""", profile)
+                        
+
+                else:
+
                     profileImgURL = ddragonBaseURL + 'img/profileicon/' + str(summonerProfile['profileIconId']) +'.png'
                     profile.update({
-                    'level' : summonerProfile['summonerLevel'],
-                    'icon': profileImgURL,
-                    'updatedAT':summonerProfile['revisionDate']
+                        'level' : summonerProfile['summonerLevel'],
+                        'icon': profileImgURL,
+                        'updatedAT': summonerProfile['revisionDate']
                     })
+
                     accountAPI = routing[region.upper()]['region'] + baseRiotAPI + baseAccountRiotPUUID+ user['puuid'] + '?' + apiKey
                     accountResponse= requests.get(accountAPI)
                     if not(accountResponse.ok):
@@ -632,53 +660,36 @@ def getLeaderboardsProfile(region, data, start, end, queueType):
                     accountData = accountResponse.json()
                     profile['name'] = accountData['gameName']
                     profile['tag'] = accountData['tagLine']
+                    # Insert the account to the database
+                    cursor.execute("INSERT INTO accounts(PUUID, name, tag, region, level, icon, updatedAT) VALUES (:PUUID, :name, :tag, :region, :level, :icon, :updatedAT)", profile)
 
+                update = ('found and NOT updated' if summonerProfile['revisionDate'] == accountsFetch['updatedAT'] else 'found and updated')  if accountsFetch else 'NOT found'
+                print('----------------AFTER {} -------------'.format(update), file=f)
+                print(profile, file=f)
+
+                if queueType == 'RANKED_SOLO_5x5':
                     cursor.execute("""UPDATE accounts SET 
-                                name = :name, tag = :tag, region = :region, 
-                                level = :level, icon = :icon, updatedAT = :updatedAT 
-                                WHERE PUUID = :PUUID""", profile)
+                            rankSoloTier = :tier , rankSoloTierImg  = :tierImg,
+                            rankSoloRank = :rank, rankSoloLP = :lp, 
+                            rankSoloWins = :wins, rankSoloLosses = :losses 
+                            WHERE PUUID = :PUUID""",
+                            profile) 
+                else:
+                    cursor.execute("""UPDATE accounts SET 
+                            rankFlexTier = :tier , rankFlexTierImg = :tierImg,
+                            rankFlexRank = :rank, rankFlexLP = :lp, 
+                            rankFlexWins = :wins, rankFlexLosses = :losses
+                            WHERE PUUID = :PUUID""",
+                            profile) 
                     
+                print('--------------- Final --------------', file=f)
+                print(profile, file=f)
+            
 
-            else:
-
-                profileImgURL = ddragonBaseURL + 'img/profileicon/' + str(summonerProfile['profileIconId']) +'.png'
-                profile.update({
-                    'level' : summonerProfile['summonerLevel'],
-                    'icon': profileImgURL,
-                    'updatedAT': summonerProfile['revisionDate']
-                })
-
-                accountAPI = routing[region.upper()]['region'] + baseRiotAPI + baseAccountRiotPUUID+ user['puuid'] + '?' + apiKey
-                accountResponse= requests.get(accountAPI)
-                if not(accountResponse.ok):
-                    return accountResponse.reason, accountResponse.status_code
-                accountData = accountResponse.json()
-                profile['name'] = accountData['gameName']
-                profile['tag'] = accountData['tagLine']
-                # Insert the account to the database
-                cursor.execute("INSERT INTO accounts(PUUID, name, tag, region, level, icon, updatedAT) VALUES (:PUUID, :name, :tag, :region, :level, :icon, :updatedAT)", profile)
-
-
-            if queueType == 'RANKED_SOLO_5x5':
-                cursor.execute("""UPDATE accounts SET 
-                        rankSoloTier = :tier , rankSoloTierImg  = :tierImg,
-                        rankSoloRank = :rank, rankSoloLP = :lp, 
-                        rankSoloWins = :wins, rankSoloLosses = :losses 
-                        WHERE PUUID = :PUUID""",
-                        profile) 
-            else:
-                cursor.execute("""UPDATE accounts SET 
-                        rankFlexTier = :tier , rankFlexTierImg = :tierImg,
-                        rankFlexRank = :rank, rankFlexLP = :lp, 
-                        rankFlexWins = :wins, rankFlexLosses = :losses
-                        WHERE PUUID = :PUUID""",
-                        profile) 
-        
-
-        cursor.close()
-        connection.close()
-        profiles[f'{index}'] = profile
-        
+            cursor.close()
+            connection.close()
+            profiles[f'{index}'] = profile
+            
     return profiles, 200
 
 

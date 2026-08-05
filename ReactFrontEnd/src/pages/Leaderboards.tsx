@@ -25,8 +25,6 @@ import { useGetLeaderboards } from '@/features/leaderboards/api/fetchLeaderboard
  */
 
 function Leaderboards() {
-
-
   // pattern for numbers
   const pattern = /^\s*[0-9]+\s*$/
 
@@ -47,14 +45,6 @@ function Leaderboards() {
   const [toggleOptions, setToggleOptions] = useState(false);
 
   // get query parameters
-
-  // const location = useLocation();
-  // const queryParameters = new URLSearchParams(location.search);
-  // const region = queryParameters.get('region') ?? 'na1';
-  // const queue = queryParameters.get('queue') ?? 'solo'
-  // const tempPage = queryParameters.get('page') ?? '1'
-  // const page = tempPage.trim().match(pattern) ? tempPage : '1'
-
   const [params, setParams] = useSearchParams()
   const region = params.get('region') ?? 'na1';
   const queue = params.get('queue') ?? 'solo'
@@ -114,7 +104,6 @@ function Leaderboards() {
     if (data === undefined) return setPageButtons([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
     // page can be null or an empty string set the page to 1
     const currPage = parseInt(page);
-    console.log('@ changing buttons, currPage:  ', currPage, ' maxPages: ', data.maxPages, 'pageButtons: ', pageButtons)
 
     if (data.maxPages > 10) {
       if (currPage > pageButtons[9]) {
@@ -153,6 +142,7 @@ function Leaderboards() {
   useEffect(() => {
     document.title = 'Leaderboards'
   }, [])
+
 
   return (
     <div className='leaderboards'>

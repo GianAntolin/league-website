@@ -43,7 +43,7 @@ function LeaderboardTable({ data, isPending, page, pageButtons }: LeaderboardsPr
                         }
                         }
                     > Prev </button>
-                    <div className='leaderboards-page-buttons'>
+                    <div className='leaderboards-page-buttons' data-testid='leaderboards-page-buttons'>
                         {pageButtons.map((currPage, index) => (
                             <button
                                 className={`button button${index}`}

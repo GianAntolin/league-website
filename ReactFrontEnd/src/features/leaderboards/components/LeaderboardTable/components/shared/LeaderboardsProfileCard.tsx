@@ -19,7 +19,7 @@ function LeaderboardsProfileCard({data, tier, rank}:LeaderboardsProfileCardProps
 
     return (
         <div>
-            {data && <div className='leaderboards-profile'>
+            {data && <div className='leaderboards-profile' data-testid='leaderboards-profile'>
                 <div className='leaderboards-profile-rank'>
                     {rank}
                 </div>
