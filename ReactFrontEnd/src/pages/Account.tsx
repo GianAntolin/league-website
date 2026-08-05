@@ -2,41 +2,34 @@ import './Account.css'
 import { useParams } from 'react-router-dom';
 
 
-import { useEffect, useState } from 'react';
-import useFetch from '@/hooks/useFetch';
+import { useEffect } from 'react';
 import BackgroundImgContextProvider from '@/context/BackgroundImgContext';
 import AccountHeader from '@/features/account/components/AccountHeader';
 import RankSummary from '@/features/account/components/RankSummary';
 import MatchHistory from '@/features/account/components/MatchHistory/MatchHistory';
 import ErrorPage from './Error/ErrorPage';
-import { SummonerData } from '@/features/account/type';
+import { useGetAccount } from '@/features/account/api/fetchAccount';
 
 
 
 /**
- * Make an API call based on the url. 
+ * Make an API call based on the path. 
  * Servers as the layout for the Account content
  */
 function Account() {
   const { region, gameName, tagLine } = useParams<{ region: string, gameName: string, tagLine: string }>();
 
-  const baseURL = 'http://127.0.0.1:5000';
-
   // Make an api call to check if the account exist
-  const [url, setUrl] = useState('');
-  const { data, isPending, error } = useFetch<SummonerData>(url);
+  const { data, isLoading, isError, error } = useGetAccount({ region: region, name: gameName, tag: tagLine });
 
-  // If the params changed, make an API call
   useEffect(() => {
-    const newUrl = `${baseURL}/api/accounts?region=${region}&name=${gameName}&tag=${tagLine}`
-    setUrl(newUrl);
     document.title = `${gameName}#${tagLine}`
   }, [region, gameName, tagLine])
 
   return (
     <BackgroundImgContextProvider>
       <div className='account'>
-        {data && !error &&
+        {data && !isError &&
           <div className='account-content'>
             <div className='account-content-section-1-header'>
               <AccountHeader summoner={data} />
@@ -61,7 +54,7 @@ function Account() {
           </div>
 
         }
-        {error && !isPending && <ErrorPage message={`${error}`} sendHome={false} />}
+        {isError && !isLoading && <ErrorPage message={`HTTP ${error.status}: ${error.response?.data}`} sendHome={false} />}
       </div>
 
     </BackgroundImgContextProvider>
