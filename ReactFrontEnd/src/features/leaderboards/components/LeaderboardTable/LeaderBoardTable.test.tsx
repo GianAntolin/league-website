@@ -19,7 +19,6 @@ function GetParams() {
 
 describe('LeaderboardBoardTable feauture', () => {
     let data: LeaderboardsData
-    let isPending: boolean
     let page: string
     let pageButtons: number[]
     let user: UserEvent
@@ -302,7 +301,6 @@ describe('LeaderboardBoardTable feauture', () => {
             },
             "tier": "CHALLENGER"
         }
-        isPending = false
         page = '1'
         pageButtons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         user = userEvent.setup()
@@ -311,7 +309,7 @@ describe('LeaderboardBoardTable feauture', () => {
 
             <MemoryRouter initialEntries={['/leaderboards?page=1']}>
 
-                <LeaderboardTable data={data} isPending={isPending} page={page} pageButtons={pageButtons} />
+                <LeaderboardTable data={data} page={page} pageButtons={pageButtons} />
                 <GetParams />
 
             </MemoryRouter>
@@ -366,7 +364,7 @@ describe('LeaderboardBoardTable feauture', () => {
 
         rerender(
             <MemoryRouter initialEntries={[`/leaderboards?page=5`]}>
-                <LeaderboardTable data={data} isPending={isPending} page={'5'} pageButtons={pageButtons} />
+                <LeaderboardTable data={data} page={'5'} pageButtons={pageButtons} />
                 <GetParams />
             </MemoryRouter>
         )
@@ -387,7 +385,7 @@ describe('LeaderboardBoardTable feauture', () => {
 
         rerender(
             <MemoryRouter initialEntries={[`/leaderboards${location.textContent}`]}>
-                <LeaderboardTable data={data} isPending={isPending} page={location.textContent!.replace(/[^0-9]/g, '')} pageButtons={pageButtons} />
+                <LeaderboardTable data={data}  page={location.textContent!.replace(/[^0-9]/g, '')} pageButtons={pageButtons} />
                 <GetParams />
             </MemoryRouter>
         )
@@ -407,7 +405,7 @@ describe('LeaderboardBoardTable feauture', () => {
         cleanup()
         render(
             <MemoryRouter initialEntries={[`/leaderboards?page=${data.maxPages}`]}>
-                <LeaderboardTable data={data} isPending={isPending} page={String(data.maxPages)} pageButtons={pageButtons} />
+                <LeaderboardTable data={data} page={String(data.maxPages)} pageButtons={pageButtons} />
                 <GetParams />
             </MemoryRouter>
         )

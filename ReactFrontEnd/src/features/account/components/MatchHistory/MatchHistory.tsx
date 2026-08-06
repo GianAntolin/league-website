@@ -57,7 +57,6 @@ function MatchHistory({ id, region }: MatchHistoryProps) {
 
   // Account changed => get the new matchlist and reset state variables
   useEffect(() => {
-    console.log('reset')
     setMatchList({})
     setWins(0);
     setGames(0);
@@ -92,7 +91,6 @@ useEffect(() => {
 if (isError) return <ErrorPage message={`${error}`} sendHome={false}></ErrorPage>
 
 if (isLoading){
-  console.log('isLoading:', isLoading)
   
   return (    
     <div className='pending-match-history'>
@@ -103,6 +101,7 @@ if (isLoading){
       </div>
   )
 }
+
 
 return (
   <div className="match">

@@ -56,8 +56,8 @@ def timeElapsed(time2):
         
 
 #Get account suggestions based on user input
-@app.route('/api/search', methods = ['GET'])
-def getAccountSuggestions():
+@app.route('/api/accounts/search', methods = ['GET'])
+def searchAccount():
     region = request.args.get('region').strip()
     name = request.args.get('name').strip()
     # If no name is provided, return None. 
@@ -113,17 +113,12 @@ def getAccountSuggestions():
             accountData['icon'] = account['icon']
             accountData['region'] = account['region']
             data.append(accountData)
-        with open('test/results/test.txt', 'w') as f:
-            print('Testing: @Framework', file=f)
-            print(f'name = {name}, tag = {tag}, region = {region}', file=f)
-            for x in data: 
-                print(x, file=f)  
     cursor.close()
     connection.close()     
     return jsonify(data) if len(data) != 0 else jsonify(None)
 
 # Get data from matches between two time stamps (start - end)
-@app.route('/api', methods = ['GET'])
+@app.route('/api/matches/champions', methods = ['GET'])
 def recentGamesData():
     region = request.args.get('region').strip()
     PUUID = request.args.get('PUUID').strip()
@@ -200,7 +195,7 @@ def account():
     return jsonify(data), status_code
 
 #Insert matches to the database based on the user's region, PUUID.
-@app.route('/api/matchlist', methods = ['GET'])
+@app.route('/api/matches', methods = ['GET'])
 def matchList():
     region = request.args.get('region').strip()
     PUUID = request.args.get('PUUID').strip()
@@ -283,7 +278,7 @@ def matchList():
 
 # Get the current leaderboard rankings
 @app.route('/api/leaderboards', methods = ['GET'])
-def getLeaderboards():
+def leaderboards():
     region = request.args.get('region').strip()
     queue = request.args.get('queue').strip()
     start = request.args.get('start').strip()

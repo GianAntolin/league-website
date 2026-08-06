@@ -24,6 +24,6 @@ export function useGetMatchHistory<T>(filters: MatchHistoryFilters){
 
 
 async function fetchMatchHistory({region, PUUID, start, count}: MatchHistoryFilters){
-    const { data } = await axios.get('http://127.0.0.1:5000/api/matchlist', {params : {region: region, PUUID: PUUID, start: start, count: count}})
+    const { data } = await axios.get('http://127.0.0.1:5000/api/matches', {params : {region: region, PUUID: PUUID, start: start, count: count}})
     return data
 }

@@ -17,6 +17,6 @@ export function useGetRecentGames<T>(filters : RecentGamesFilters){
 }
 
 async function fetchRecentGames({region, id, start, end} : RecentGamesFilters){
-    const { data } = await axios.get('http://127.0.0.1:5000/api', {params: {region: region, PUUID: id, start: start, end: end}})
+    const { data } = await axios.get('http://127.0.0.1:5000/api/matches/champions', {params: {region: region, PUUID: id, start: start, end: end}})
     return data
 }

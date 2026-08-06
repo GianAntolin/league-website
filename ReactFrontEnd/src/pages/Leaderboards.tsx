@@ -99,7 +99,6 @@ function Leaderboards() {
 
     if (data.maxPages > 10) {
       if (currPage > pageButtons[9]) {
-        console.log('pageButton[9]: ', pageButtons[9])
         // Prevent buttons from going over the maxPages
         if (currPage < data.maxPages) {
           // Check if there's enough pages for 10 buttons
