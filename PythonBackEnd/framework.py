@@ -53,17 +53,31 @@ def timeElapsed(time2):
         if secondsElapsed > 1:
             timeUnit += 's'
         return f'{secondsElapsed} {timeUnit} ago'
-        
+    
+ # Checks if all required parameters are provided
+ # params - array of (paramaters name, parameter value) 
+def required_params(params):
+    for (param, value )in params: 
+        if (not value):
+            return True, f'Missing {param}'
+    return False, None
 
 #Get account suggestions based on user input
 @app.route('/api/accounts/search', methods = ['GET'])
 def searchAccount():
-    region = request.args.get('region').strip()
-    name = request.args.get('name').strip()
-    # If no name is provided, return None. 
-    if name == '':
-        return jsonify(None)
-    tag = request.args.get('tag').strip()
+    region = request.args.get('region', '').strip()
+    name = request.args.get('name', '').strip()
+
+    params = [
+        ('region', region), 
+        ('name', name)
+    ]
+    isError, error = required_params(params)
+    if isError: 
+        return jsonify(error), 400
+    
+
+    tag = request.args.get('tag', '').strip()
 
     with sqlite3.connect('website.db') as connection:
         connection.row_factory = sqlite3.Row
@@ -120,10 +134,21 @@ def searchAccount():
 # Get data from matches between two time stamps (start - end)
 @app.route('/api/matches/champions', methods = ['GET'])
 def recentGamesData():
-    region = request.args.get('region').strip()
-    PUUID = request.args.get('PUUID').strip()
-    start = request.args.get('start')
-    end = request.args.get('end')
+    region = request.args.get('region', '').strip()
+    PUUID = request.args.get('PUUID','').strip()
+    start = request.args.get('start','').strip()
+    end = request.args.get('end','').strip()
+
+    params = [
+        ('region', region), 
+        ('PUUID', PUUID),
+        ('start', start),
+        ('end', end)
+    ]
+    isError, error = required_params(params)
+    if isError: 
+        return jsonify(error), 400
+
     with sqlite3.connect('website.db') as connection:
         connection.row_factory = sqlite3.Row
         cursor = connection.cursor()
@@ -162,20 +187,29 @@ def recentGamesData():
                         data['champions'][matchData['champion']]['deaths'] = matchData['deaths']
                         data['champions'][matchData['champion']]['assists'] = matchData['assists']
                     
+            data = dict(sorted(data['champions'].items(), key = lambda champion: champion[1]['games'], reverse=True)[:3])
     cursor.close()
     connection.close()
-    data = dict(sorted(data['champions'].items(), key = lambda champion: champion[1]['games'], reverse=True)[:3])
-
     return app.response_class(response = json.dumps(data, sort_keys=False),
-                              mimetype='application/json')
+                              mimetype='application/json'), 200
 
 # Check if account exists 
 # If so, insert/update the account to the database
 @app.route('/api/accounts', methods=['GET'])
 def account(): 
-    region = request.args.get('region').strip()
-    gameName = request.args.get('name').strip()
-    tagLine = request.args.get('tag').strip()
+    region = request.args.get('region', '').strip()
+    gameName = request.args.get('name', '').strip()
+    tagLine = request.args.get('tag', '').strip()
+
+    params = [
+        ('region', region), 
+        ('game name', gameName),
+        ('tag', tagLine)
+    ]
+    isError, error = required_params(params)
+    if isError: 
+        return jsonify(error), 400
+
 
     with sqlite3.connect('website.db') as connection:
         connection.row_factory = sqlite3.Row
@@ -197,10 +231,20 @@ def account():
 #Insert matches to the database based on the user's region, PUUID.
 @app.route('/api/matches', methods = ['GET'])
 def matchList():
-    region = request.args.get('region').strip()
-    PUUID = request.args.get('PUUID').strip()
-    start = request.args.get('start').strip()
-    count = request.args.get('count').strip()
+    region = request.args.get('region', '').strip()
+    PUUID = request.args.get('PUUID', '').strip()
+    start = request.args.get('start','').strip()
+    count = request.args.get('count','').strip()
+
+    params = [
+        ('region', region), 
+        ('PUUID', PUUID),
+        ('start', start),
+        ('count', count)
+    ]
+    isError, error = required_params(params)
+    if isError: 
+        return jsonify(error), 400
 
     with sqlite3.connect('website.db') as connection: 
         connection.row_factory = sqlite3.Row
@@ -279,10 +323,21 @@ def matchList():
 # Get the current leaderboard rankings
 @app.route('/api/leaderboards', methods = ['GET'])
 def leaderboards():
-    region = request.args.get('region').strip()
-    queue = request.args.get('queue').strip()
-    start = request.args.get('start').strip()
-    end = request.args.get('end').strip()
+    region = request.args.get('region', '').strip()
+    queue = request.args.get('queue', '').strip()
+    start = request.args.get('start', '').strip()
+    end = request.args.get('end', '').strip()
+
+    params = [
+        ('region', region), 
+        ('queue', queue),
+        ('start', start),
+        ('end', end)
+    ]
+    isError, error = required_params(params)
+    if isError: 
+        return jsonify(error), 400
+
     leaderboards = backend.getLeaderboards(region, queue, start, end)
     data = leaderboards[0]
     status_code = leaderboards[1]
