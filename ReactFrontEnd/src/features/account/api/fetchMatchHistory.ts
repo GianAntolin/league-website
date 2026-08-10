@@ -1,3 +1,4 @@
+import { APIErrorResponse } from "@/shared/type"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import axios, { AxiosError } from "axios"
 
@@ -11,7 +12,7 @@ type MatchHistoryFilters = {
 }
 
 export function useGetMatchHistory<T>(filters: MatchHistoryFilters){
-    return useQuery<T, AxiosError>({
+    return useQuery<T, AxiosError<APIErrorResponse>>({
         queryKey: ['/matchHistory', filters],
         queryFn: () => fetchMatchHistory(filters),
         placeholderData: keepPreviousData

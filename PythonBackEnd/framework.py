@@ -5,6 +5,8 @@ import sqlite3
 import datetime
 import json
 
+from RiotError import RiotRateLimit, RiotUnauthorized, RiotNotFound
+
 app = Flask(__name__)
 
 # Enable CORS for all routes (this will allow all origins)
@@ -215,7 +217,17 @@ def account():
         connection.row_factory = sqlite3.Row
         cursor = connection.cursor()
         # insert/update accounts if applicable
-        response = backend.getSummoner(region, gameName, tagLine)
+        try: 
+            response = backend.getSummoner(region, gameName, tagLine)
+        except RiotUnauthorized as error: 
+            return jsonify({ 'message' : error.message}), 500
+        except RiotRateLimit as error:
+            return jsonify({ 'message': 'Failed to fetch data from riot', }), 502
+        except RiotNotFound as error: 
+            return jsonify({ 'message': error.message}), 404
+        except Exception as error: 
+            return jsonify({ 'message': str(error)}),  500
+        
         status_code = response[1]
         # check if the account was inserted/updated
         if status_code == 200:
@@ -250,8 +262,19 @@ def matchList():
         connection.row_factory = sqlite3.Row
         cursor = connection.cursor()
         # insert matches if applicable
-        response = backend.matchList(region, PUUID, start, count)
+        try: 
+            response = backend.matchList(region, PUUID, start, count)
+        except RiotUnauthorized as error: 
+            return jsonify({ 'message' : error.message}), 500
+        except RiotRateLimit as error:
+            return jsonify({ 'message': 'Failed to fetch data from riot', }), 502
+        except RiotNotFound as error: 
+            return jsonify({ 'message': error.message}), 404
+        except Exception as error: 
+            return jsonify({ 'message': str(error)}),  500
+
         status_code = response[1]
+
         command = "SELECT * FROM matches WHERE matchID IN ({}) ORDER BY gameEndTimestamp DESC".format(','.join(len(response[0]['matches']) * '?'))
         # Get matches from the database
         cursor.execute(command, response[0]['matches'])
@@ -337,8 +360,19 @@ def leaderboards():
     isError, error = required_params(params)
     if isError: 
         return jsonify(error), 400
+    
 
-    leaderboards = backend.getLeaderboards(region, queue, start, end)
+    try: 
+        leaderboards = backend.getLeaderboards(region, queue, start, end)
+    except RiotUnauthorized as error: 
+        return jsonify({ 'message' : error.message}), 500
+    except RiotRateLimit as error:
+        return jsonify({ 'message': 'Failed to fetch data from riot', }), 502
+    except RiotNotFound as error: 
+        return jsonify({ 'message': error.message}), 404
+    except Exception as error: 
+        return jsonify({ 'message': str(error)}),  500
+
     data = leaderboards[0]
     status_code = leaderboards[1]
     return jsonify(data), status_code

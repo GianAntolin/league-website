@@ -2,7 +2,7 @@ import { FormEvent, useState } from "react";
 import { useNavigate, NavLink } from 'react-router-dom';
 import './SearchBar.css';
 import DropDown from "@/components/DropDown";
-import { regions, regionTags} from "@/constants/regions";
+import { regions, regionTags} from "@/shared/regions";
 import { useGetSearchAccount } from "../api/fetchSearchAccount";
 
 

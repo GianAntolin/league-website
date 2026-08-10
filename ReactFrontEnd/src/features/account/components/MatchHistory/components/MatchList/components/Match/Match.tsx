@@ -34,6 +34,9 @@ function Match({data, region}: MatchProps) {
     const mainTarget = data.participants[data.mainParticipant as keyof typeof data.participants];
     // Match is voided if the game duration is less than or equal to 3 minutes
     const remake = data.gameDurationM  <= 3;
+
+    const backgroundColor = remake ? 'linear-gradient(90deg, rgb(58, 58, 59), 10%, rgb(71, 71, 78))' 
+                            : data.win ? 'linear-gradient(90deg, rgb(38, 56, 169), 10%, rgba(40, 52, 78, 1))' : 'linear-gradient(90deg, rgb(141, 42, 60), 10%, rgba(89, 52, 59, 1))'
     
     // Maintains the visibility status of a dropdown menu
     const [toggle, setToggle] = useState(false);
@@ -59,7 +62,7 @@ function Match({data, region}: MatchProps) {
 
     return (
         <div className='match-top-level'>
-            <div className='match-details' style = {{background: remake ? 'linear-gradient(90deg, rgb(58, 58, 59), 10%, rgb(71, 71, 78))' : data.win ? 'linear-gradient(90deg, rgb(38, 56, 169), 10%, rgba(40, 52, 78, 1))' : 'linear-gradient(90deg, rgb(141, 42, 60), 10%, rgba(89, 52, 59, 1))'}}>
+            <div className='match-details' style = {{background: backgroundColor}}>
                 <div className='date-outcome-container'>
                     <div className ='queue-date'>
                         <span className='match-queue'>  
@@ -95,10 +98,10 @@ function Match({data, region}: MatchProps) {
                                 <div className='match-summoner-spell2' style={{gridArea: '2/1/3/2'}}> 
                                     <SummonerSpell url = {mainTarget.summonerSpell2URL} height = {`24px`} width = {`24px`}/>
                                 </div>
-                                <div className='match-rune1' style={{borderRadius: '3px', gridArea: '1/2/2/3', backgroundColor: mainTarget.win ? '#223b80': '#59343b'}}>
+                                <div className='match-rune1' style={{borderRadius: '3px', gridArea: '1/2/2/3', backgroundColor:  '#191937'}}>
                                     <img src={mainTarget.summonerKeyStoneURL} style={{height: '24px', width: '24px'}} />
                                 </div>
-                                <div className='match-rune2'style={{borderRadius: '3px', gridArea: '2/2/3/3', backgroundColor: mainTarget.win ? '#223b80': '#59343b'}}>
+                                <div className='match-rune2'style={{borderRadius: '3px', gridArea: '2/2/3/3', backgroundColor: '#191937'}}>
                                     <img src={mainTarget.summonerSecondaryRuneTypeURL} style={{height: '24px', width: '24px', transform: 'scale(0.85)'}}/>
                                 </div>
                             </div>
@@ -139,7 +142,7 @@ function Match({data, region}: MatchProps) {
                         </div>
 
                         <div className = 'item-list-container'>
-                            <ItemList items={mainTarget.items} win = {mainTarget.win}></ItemList>
+                            <ItemList items={mainTarget.items} color = {remake ? '#191937' : data.win ? '#314b94' : '#6e4049'}></ItemList>
                         </div>
                         
                     </div>

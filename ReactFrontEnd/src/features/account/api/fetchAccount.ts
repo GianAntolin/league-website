@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import {SummonerData } from "../type";
 import axios, { AxiosError } from "axios";
+import { APIErrorResponse } from "@/shared/type";
 
 export type AccountFilters = {
     region : string | undefined, 
@@ -11,7 +12,7 @@ export type AccountFilters = {
 
 
 export function useGetAccount(filters: AccountFilters){
-    return useQuery<SummonerData, AxiosError>({
+    return useQuery<SummonerData, AxiosError<APIErrorResponse>>({
         queryKey: ['/accounts', filters],
         queryFn: () => fetchAccount(filters)
     }) 

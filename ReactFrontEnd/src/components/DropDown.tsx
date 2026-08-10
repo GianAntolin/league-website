@@ -1,4 +1,4 @@
-import { RegionsType } from '@/constants/regions';
+import { RegionsType } from '@/shared/regions';
 import './DropDown.css'
 
 interface DropdownProps{

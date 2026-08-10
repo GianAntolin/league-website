@@ -1,5 +1,6 @@
+import { APIErrorResponse } from "@/shared/type";
 import { useQuery } from "@tanstack/react-query"
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 
 type SearchAccountFilters = {
     region: string,
@@ -7,7 +8,7 @@ type SearchAccountFilters = {
 }
 
 export function useGetSearchAccount<T>(filters: SearchAccountFilters) {
-    return useQuery<T>({
+    return useQuery<T, AxiosError<APIErrorResponse>>({
         queryKey: ['/search', filters],
         queryFn: () => fetchSearchAccount(filters)
     })

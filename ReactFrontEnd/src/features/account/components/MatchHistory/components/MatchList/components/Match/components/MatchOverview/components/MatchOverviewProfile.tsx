@@ -24,6 +24,8 @@ interface MatchOverviewProfileProps{
  */
 function MatchOverviewProfile({data, highestDmg, gameDurationM, gameDurationS, region}: MatchOverviewProfileProps) {
 
+    const backgroundColor = data.win ? '#314b94' : '#6e4049'
+
     return (
         <div className='overview-profile-top'>
             <div className='champion-summoner-spells-overview'> 
@@ -86,7 +88,7 @@ function MatchOverviewProfile({data, highestDmg, gameDurationM, gameDurationS, r
                 </div>
             </div>
             <div className='overview-item-list'>
-                <ItemList items = {data.items} win = {data.win}></ItemList>
+                <ItemList items = {data.items} color = {backgroundColor}></ItemList>
             </div>
         </div>
     )

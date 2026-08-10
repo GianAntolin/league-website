@@ -5,7 +5,7 @@ import { useSearchParams } from 'react-router-dom';
 import LeaderboardTable from '@/features/leaderboards/components/LeaderboardTable/LeaderboardTable';
 import DropDown from '@/components/DropDown';
 import ErrorLeaderboards from './Error/ErrorLeaderboards';
-import { regions, regionTags } from '@/constants/regions';
+import { regions, regionTags } from '@/shared/regions';
 import { useGetLeaderboards } from '@/features/leaderboards/api/fetchLeaderboards';
 
 
@@ -134,6 +134,10 @@ function Leaderboards() {
     document.title = 'Leaderboards'
   }, [])
 
+  if (isError){
+    console.log(error)
+  }
+
 
   return (
     <div className='leaderboards'>
@@ -188,7 +192,7 @@ function Leaderboards() {
       }
 
       {data && <LeaderboardTable data={data} page={page} pageButtons={pageButtons} />}
-      {isError && <ErrorLeaderboards message={`${error.response?.data}`} />}
+      {isError && <ErrorLeaderboards message={`${error.response?.data?.message}`} />}
     </div>
   )
 }

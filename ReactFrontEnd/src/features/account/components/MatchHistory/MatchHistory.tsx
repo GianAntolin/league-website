@@ -88,7 +88,7 @@ useEffect(() => {
   }
 }, [games, wins])
 
-if (isError) return <ErrorPage message={`${error}`} sendHome={false}></ErrorPage>
+if (isError) return <ErrorPage message={`${error.response?.data?.message}`} sendHome={false}></ErrorPage>
 
 if (isLoading){
   

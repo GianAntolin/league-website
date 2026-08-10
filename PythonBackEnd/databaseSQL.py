@@ -1,7 +1,8 @@
 import sqlite3
 
 def createDatabase():
-    with connection: 
+    with sqlite3.connect('website.db') as connection: 
+        cursor = connection.cursor()
         cursor.execute("""CREATE TABLE accounts(
                     PUUID TEXT PRIMARY KEY,
                     name TEXT NOT NULL COLLATE NOCASE,
@@ -82,10 +83,9 @@ def createDatabase():
                     win,
                     FOREIGN KEY(matchID) REFERENCES matches(matchID))
                         """)
-
+    cursor.close()
+    connection.close()
     
 
-connection = sqlite3.connect('website.db')
-cursor = connection.cursor()
+
 createDatabase()
-connection.close()

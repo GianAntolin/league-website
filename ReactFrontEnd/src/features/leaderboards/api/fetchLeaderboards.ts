@@ -1,11 +1,12 @@
 import axios, { AxiosError } from "axios";
 import { LeaderboardsData, LeaderboardsFilter } from "../type";
 import { useQuery } from "@tanstack/react-query";
-import { regionTags } from "@/constants/regions";
+import { regionTags } from "@/shared/regions";
+import { APIErrorResponse } from "@/shared/type";
 
 
 export function useGetLeaderboards(filters: LeaderboardsFilter) {
-    return useQuery<LeaderboardsData, AxiosError<string>>({
+    return useQuery<LeaderboardsData, AxiosError<APIErrorResponse>>({
         queryKey: ['/leaderboards', filters],
         queryFn: () => fetchLeaderboards(filters)
     })

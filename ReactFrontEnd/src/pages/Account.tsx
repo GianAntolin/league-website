@@ -54,7 +54,7 @@ function Account() {
           </div>
 
         }
-        {isError && !isLoading && <ErrorPage message={`HTTP ${error.status}: ${error.response?.data}`} sendHome={false} />}
+        {isError && !isLoading && <ErrorPage message={`HTTP ${error.status}: ${error.response?.data?.message}`} sendHome={false} />}
       </div>
 
     </BackgroundImgContextProvider>

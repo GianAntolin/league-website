@@ -1,5 +1,6 @@
+import { APIErrorResponse } from "@/shared/type";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 type RecentGamesFilters = {
     region: string,
@@ -9,7 +10,7 @@ type RecentGamesFilters = {
 }
 
 export function useGetRecentGames<T>(filters : RecentGamesFilters){
-    return useQuery<T>({
+    return useQuery<T, AxiosError<APIErrorResponse>>({
         queryKey : ['/matchlist', filters],
         queryFn: () => fetchRecentGames(filters),
         placeholderData: keepPreviousData
