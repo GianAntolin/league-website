@@ -1,4 +1,4 @@
-import '../css/ProfileIcon.css'
+import './ProfileIcon.css'
 
 interface ProfileIconProps{
   url: string;

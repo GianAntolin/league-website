@@ -1,33 +1,15 @@
 import { useEffect, useState } from 'react';
-import '../css/Leaderboards.css'
-import useFetch from '../hooks/useFetch';
-import {useLocation, useNavigate, useOutletContext } from 'react-router-dom';
-import DropDown from '../components/DropDown';
-import LeaderboardsMain from '../components/LeaderboardsMain';
-import LeaderboardsPageX from '../components/LeaderboardsPageX';
-import ErrorLeaderboards from './ErrorLeaderboards';
-import { RegionsData } from './HomePage';
+import './Leaderboards.css'
+import { useSearchParams } from 'react-router-dom';
 
-export interface LeaderboardsProfile{
-  icon: string;
-  PUUID: string;
-  lp: number;
-  wins: number;
-  losses: number;
-  level: number;
-  name: string;
-  tag: string;
-  region: string;
-}
-export interface LeaderboardsProfiles{
-  [key: string] : LeaderboardsProfile;
-}
+import LeaderboardTable from '@/features/leaderboards/components/LeaderboardTable/LeaderboardTable';
+import DropDown from '@/components/DropDown';
+import ErrorLeaderboards from './Error/ErrorLeaderboards';
+import { regions, regionTags } from '@/shared/regions';
+import { useGetLeaderboards } from '@/features/leaderboards/api/fetchLeaderboards';
 
-export interface LeaderboardsData{
-  profiles: LeaderboardsProfiles;
-  tier: string;
-  maxPages: number;
-}
+
+
 
 
 /**
@@ -43,182 +25,120 @@ export interface LeaderboardsData{
  */
 
 function Leaderboards() {
-  const baseURL = 'http://127.0.0.1:5000/api/leaderboards'; 
-  const {regions, regionTags} = useOutletContext<RegionsData>()
-  
-  
-  const navigate = useNavigate()
   // pattern for numbers
-  const pattern = /^\s*[0-9]+\s*$/g     
+  const pattern = /^\s*[0-9]+\s*$/
 
   // Region selected
-  const [selected, setSelected] = useState<string> ('na1');
+  const [selected, setSelected] = useState<string>('na1');
 
   // Queue type
   const [queueType, setQueue] = useState<string>('solo');
-  
-  // API endpoint
-  const [url, setURL] = useState<string>('');
-  // API call for ranking data
-  const {data, isPending, error} = useFetch<LeaderboardsData>(url);
 
   // Navigation web buttons
-  const [pageButtons, setPageButtons] = useState<Array<number> | null>(null)
+  const [pageButtons, setPageButtons] = useState<Array<number>>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
   // Controls if the drop down is hidden or visible 
   const [toggleOptions, setToggleOptions] = useState(false);
 
   // get query parameters
-  const location = useLocation();
-  const queryParameters = new URLSearchParams(location.search);
-  const region = queryParameters.get('region');
-  const page = queryParameters.get('page')
-  const queue = queryParameters.get('queue')
+  const [params, setParams] = useSearchParams()
+  const region = params.get('region') ?? 'na1';
+  const queue = params.get('queue') ?? 'solo'
+  const tempPage = params.get('page') ?? '1'
+  const page = tempPage.trim().match(pattern) ? tempPage : '1'
+
+
+  const { data, isLoading , isError, error } = useGetLeaderboards({ region, page, queue })
 
 
   const rangeLoop = (start: number, end: number) => {
-    return Array.from({length: end - start + 1}, (_, index) => start+index)
+    return Array.from({ length: end - start + 1 }, (_, index) => start + index)
   }
 
-  // Update the query parameters based user input (ranked solo/ranked flex) and reset the page paramete
+  // Update the query parameters based user input (ranked solo/ranked flex) and reset the page parameter
   const handleQueueButton = (queue: string) => {
     setQueue(queue)
-    const updateParams = new URLSearchParams(location.search);
-
-    if (queueType) {
-      updateParams.set('queue', queue)
-    } else{
-      updateParams.append('queue', queue)
-    }
-
-    updateParams.delete('page')
-
-    navigate({pathname: location.pathname, search: updateParams.toString()})
+    setParams((prev) => {
+      prev.set('queue', queue)
+      prev.delete('page')
+      return prev
+    })
   }
 
   // Update the query parameters based user input (regions) and reset the page parameter
-  const handleRegionButton = (region: string) =>{ 
+  const handleRegionButton = (region: string) => {
     setSelected(region)
     setToggleOptions(false);
-    const updatedParams = new URLSearchParams(location.search)
-    if (selected){
-      updatedParams.set('region', region)
-    } else{
-      updatedParams.append('region', region)
-    }
-    updatedParams.delete('page')
-    navigate({pathname: location.pathname, search: updatedParams.toString()})
+    setParams((prev) => {
+      prev.set('region', region)
+      prev.delete('page')
+      return prev
+    })
 
   }
-  
-  // Check the parameters
-  // Error Handling: wrong parameters and missings parameters
-  // Send an API fetch based on the query parameters
-  useEffect( () => {
-    let urlTemp = baseURL;
-    // Search parameters: region
-    if (region){
-      // Check if the region is valid
-      if (regionTags.includes(region.toUpperCase())){
-        if (region != selected) {
-          setSelected(region.toLocaleLowerCase());
-        }
-        urlTemp += `/${region.toLocaleLowerCase()}`;
 
-      } else{
-        // Default to 'NA1'
-        setSelected('na1');
-        urlTemp += '/na1';
-        
-      }
-    } else{
-      if (selected === null) {
-        setSelected('na1');
-        urlTemp += '/na1';
-      }else urlTemp += `/${selected.toLocaleLowerCase()}`;
+  useEffect(() => {
+
+    if (regionTags.includes(region.trim().toUpperCase())) {
+      if (region != selected) setSelected(region.trim().toLowerCase())
     }
 
-    if (queue){
-      // Check if the queue is valid. default to solo 
-      if (queue === 'flex'){
-        setQueue('flex');
-        urlTemp += '/flex';
-      } else{
-        if (queue != queueType) {
-          setQueue('solo');
-        }
-        urlTemp += '/solo';
+
+    if (queue === 'flex' || queue === 'solo') {
+      if (queue != queueType) {
+        setQueue(queue)
       }
-    } else{
-      if (queueType === null){
-        setQueue('solo');
-        urlTemp += '/solo';
-      }else urlTemp += `/${queueType}`;
     }
 
-    // Search parameters: page
-    if (page){
-      // Check if the page is valid
-      if (page.match(pattern)){
-        urlTemp += `/${ (parseInt(page) - 1) * 10}/${(parseInt(page) * 10)}`;
 
-      } else{
-        // Default to start = 0, end = 10
-        urlTemp += `/0/10`;
-      }
-    } else{
-      urlTemp += `/0/10`;
-    }
-    setURL(urlTemp);
-
-  },[region, queue, page])
+  }, [page, region, queue])
 
   // Update the web navigation buttons according to the page number
-  useEffect( () => {
-    // Checking edge cases
-    if (data === null) return setPageButtons(null);
-    // page can be null or an empty string set the page to 1
-    let currPage;
-    if (page === null || page === '') {
-      currPage = 1;
-    } else {
-      currPage = parseInt(page);
+  useEffect(() => {
+    if (data === undefined) return setPageButtons([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    const currPage = parseInt(page);
 
-    }
-
-
-    // curr page exceed the maximum number of pages
-    if (currPage > data.maxPages) return;
-
-    else {
-      // prevent the page numbers from going below 1 
-      if (currPage > 3){
-        // prevent the page numberes from going above the max pages
-        if (currPage + 5 > data.maxPages) {
-          setPageButtons(rangeLoop(data.maxPages-8, data.maxPages));
-        } else{
-          setPageButtons(rangeLoop(currPage - 3, currPage + 5));
-        }
-      } else{
-        if (currPage + 5 > data.maxPages) {
-          setPageButtons(rangeLoop(1, data.maxPages));
-        } else{
-          // Theres at least 9 buttons unless the max page is less than 9
-          if (data.maxPages > 9) setPageButtons(rangeLoop(1, 9));
-          else setPageButtons(rangeLoop(1, data.maxPages));
+    if (data.maxPages > 10) {
+      if (currPage > pageButtons[9]) {
+        // Prevent buttons from going over the maxPages
+        if (currPage < data.maxPages) {
+          // Check if there's enough pages for 10 buttons
+          if ((Math.floor(currPage / 10) + 1) * 10 < data.maxPages) {
+            setPageButtons(rangeLoop((Math.floor(currPage / 10) * 10) + 1, (Math.floor(currPage / 10) + 1) * 10))
+          } else {
+            setPageButtons(rangeLoop((Math.floor(currPage / 10) * 10) + 1, data.maxPages))
+          }
         }
       }
-    }   
+
+      if (currPage < pageButtons[0]) {
+        if (currPage < 1) {
+          setPageButtons(rangeLoop(1, data.maxPages))
+        } else {
+          const temp = (Math.floor(currPage / 10) - 1) * 10
+          const start = temp === 0 ? 1 : temp
+          setPageButtons(rangeLoop(start, Math.floor(currPage / 10) * 10))
+
+        }
+      }
+
+    } else {
+      setPageButtons(rangeLoop(1,data.maxPages))
+    }
 
 
 
   }, [data])
-  
 
-  useEffect( () => {
+
+  useEffect(() => {
     document.title = 'Leaderboards'
-  },[])
+  }, [])
 
-  
+  if (isError){
+    console.log(error)
+  }
+
+
   return (
     <div className='leaderboards'>
       <div className='leaderboards-header'>
@@ -230,108 +150,49 @@ function Leaderboards() {
         <div className='leadersboards-subheading1'>
           <div className="leaderboards-section1">
             <button
-                onClick={() => setToggleOptions(!toggleOptions)}
-                >
-                {selected === null ? regions[0].label : regions[regionTags.indexOf(selected.toLocaleUpperCase())].label}
+              onClick={() => setToggleOptions(!toggleOptions)}
+            >
+              {selected === null ? regions[0].label : regions[regionTags.indexOf(selected.toLocaleUpperCase())].label}
             </button>
-            { toggleOptions &&
+            {toggleOptions &&
               <div className='leaderboards-drop-down'>
-                <DropDown options = {regions} handleSelected={handleRegionButton}></DropDown>
+                <DropDown options={regions} handleSelected={handleRegionButton}></DropDown>
               </div>
             }
 
           </div>
           <div className='leadersboards-subheading1-div1'>
             <button
-              style = {{backgroundColor: (queueType === 'solo' || queueType === null || queue === 'solo') ? '#070765' : ''}}
-              onClick = { () => handleQueueButton('solo')}>
-                <span className='solo'>
-                  Ranked Solo
-                </span>
+              style={{ backgroundColor: (queueType === 'solo' || queueType === null || queue === 'solo') ? '#070765' : '' }}
+              onClick={() => handleQueueButton('solo')}>
+              <span className='solo'>
+                Ranked Solo
+              </span>
             </button>
-          </div>  
+          </div>
           <div className='leadersboards-subheading1-div2'>
             <button
-              style = {{backgroundColor: queue === 'flex' || queueType === 'flex'? '#070765' : ''}}
-              onClick = { () => handleQueueButton('flex')}>
-                <span className='flex'>
-                  Ranked Flex
-                </span>
+              style={{ backgroundColor: queue === 'flex' || queueType === 'flex' ? '#070765' : '' }}
+              onClick={() => handleQueueButton('flex')}>
+              <span className='flex'>
+                Ranked Flex
+              </span>
             </button>
           </div>
         </div>
       </div>
-      { !data && isPending && 
+      {!data && isLoading &&
         <div className='pending'>
           <div className="spinner-border text-secondary" role="status">
             <span className="visually-hidden">Loading...</span>
           </div>
 
         </div>
-      
-      }
-      {data && 
-        <div className = 'leaderboards-content'>
-          {isPending && 
-            <div className='pending'>
-              <div className="spinner-border text-secondary" role="status">
-                <span className="visually-hidden">Loading...</span>
-              </div>
 
-            </div>}
-          {!isPending && <div className='leaderboards-outlet'>
-            { (page === null || page === '' || page === '1' )&&  <LeaderboardsMain data = {data}/>}
-            { page !== null &&  page !== '' && parseInt(page) > 1 &&  <LeaderboardsPageX data = {data}/>}
-
-            {pageButtons && <div className='leaderboards-page-navigation'>
-                <button 
-                  className='leaderboards-page-prev'
-                  style = {{visibility: page === null || page === '1' ? 'hidden' : 'visible'}}
-                  disabled = {page === '1'}
-                  onClick = { () => {
-                    const currPage = page === null || page === '' ? 1 : parseInt(page)
-                    const updateParams = new URLSearchParams(location.search);
-                    updateParams.set('page', (currPage-1).toString())
-                    navigate({pathname: location.pathname, search: updateParams.toString()})}
-                  }
-                  > Prev </button>
-                <div className='leaderboards-page-buttons'>
-                {pageButtons.map( (currPage, index) => (
-                    <button 
-                    className={`button button${index}`}
-                    key = {currPage}
-                    onClick={() => {
-                      const updateParams = new URLSearchParams(location.search);
-                      updateParams.set('page', currPage.toString())
-                      navigate({pathname: location.pathname, search: updateParams.toString()});
-                    }}
-                    style = {{textDecoration: 
-                      ((page === null ? 1 : (parseInt(page))) === currPage) ? 'underline #3776fc' : '',
-                      textUnderlineOffset: '0.25rem', textDecorationThickness: '0.125rem'
-                    }}
-                    > 
-                          {currPage}
-                    </button>
-                  )
-                )}
-              </div>
-                <button 
-                className='leaderboards-page-next'
-                style = {{visibility: page === data.maxPages.toString() ? 'hidden' : 'visible'}}
-                disabled = {page === data.maxPages.toString()}
-                onClick = { () => {
-                  const currPage = page === null || page === '' ? 1 : parseInt(page)
-                    const updateParams = new URLSearchParams(location.search);
-                    updateParams.set('page', (currPage+1).toString())
-                    navigate({pathname: location.pathname, search: updateParams.toString()})}
-                }>
-                 Next </button>
-              </div>}  
-            </div>
-          }
-          </div>  
       }
-      {error && !data &&!isPending && <ErrorLeaderboards message ={`${error}`}/>}
+
+      {data && <LeaderboardTable data={data} page={page} pageButtons={pageButtons} />}
+      {isError && <ErrorLeaderboards message={`${error.response?.data?.message}`} />}
     </div>
   )
 }

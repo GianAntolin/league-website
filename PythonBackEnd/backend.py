@@ -2,9 +2,12 @@ import requests
 import math
 import sqlite3
 import datetime
+import time
 
 import os
 from dotenv import load_dotenv;
+
+from RiotError import RiotRateLimit, RiotUnauthorized, RiotNotFound
 
 # API key is stored as an environment variable
 load_dotenv()
@@ -91,17 +94,36 @@ baseMatchListURL = "/lol/match/v5/matches/by-puuid/" #region
 baseMatchURL = "/lol/match/v5/matches/" #region
 baseChallengerQueue = '/lol/league/v4/challengerleagues/by-queue/' #platform
 baseLeagueRank = '/lol/league/v4/entries/by-puuid/' #platform
-#Base URL for data and assets
 
-    #Make an API call to find the latest version of DDragon
+#Parameters: 
+#   url - api endpoints
+#   retries - before raising an exception
+#   errorMsg - error message for 404 
+def call_with_retry(url, retries, errorMsg): 
+    timePassed = 0
+    for i in range(retries): 
+        response = requests.get(url)
+        if (response.ok):
+            return response
+        else:
+            if (response.status_code == 401 or response.status_code == 403): 
+                raise RiotUnauthorized(response.json().get('status').get('message', response.reason))
+            elif (response.status_code == 404): 
+                raise RiotNotFound(errorMsg)
+            elif (response.status_code == 429):
+                retry_after = response.headers.get('Retry-After', 1)
+                timePassed += int(retry_after)
+                time.sleep(int(retry_after))
+            else: 
+                raise Exception (response.json().get('status').get('message', response.reason))
+    raise RiotRateLimit(f'Rate Limit Exceeded. Failed to fetch at {url} after {retries} tries ({timePassed} seconds)')
+
+#Make an API call to find the latest version of DDragon
 def getLatestDDragonversion():
-    response = requests.get("https://ddragon.leagueoflegends.com/api/versions.json")
+    response =  requests.get("https://ddragon.leagueoflegends.com/api/versions.json")
     DdragonVersions = response.json()
     return "https://ddragon.leagueoflegends.com/cdn/" + DdragonVersions[0] + "/"
 ddragonBaseURL = getLatestDDragonversion()
-
-challengerRankedSoloURL = "https://na1.api.riotgames.com/lol/league/v4/challengerleagues/by-queue/RANKED_SOLO_5x5" #platform
-
 
 # API call to get summoner spells data
 def getSummonerSpellsData():
@@ -113,6 +135,7 @@ def getSummonerSpellsData():
 def getRunesData(): 
     response = requests.get(ddragonBaseURL + "data/en_US/runesReforged.json")
     return response.json()
+
 
 summonerSpellID = getSummonerSpellsData()
 runesData = getRunesData()
@@ -165,13 +188,8 @@ def getSummoner(region, gameName, tagLine):
         return 'Region not found',404
 
     apiURL = routing[region.upper()]['region'] + baseRiotAPI + baseAccountRiotIDURL + gameName + "/" + tagLine + "?" + apiKey
-    response = requests.get(apiURL)
+    response = call_with_retry(apiURL, 5, f'No search results for {gameName}#{tagLine}')
 
-    #Check the HTTP status code
-    if not(response.ok):
-        if (response.status_code == 404):
-            return f'No search results for {gameName}#{tagLine}', response.status_code
-        return response.reason, response.status_code
     #convert the response to a JSON object
     account = response.json()
 
@@ -180,86 +198,84 @@ def getSummoner(region, gameName, tagLine):
 
     #Send a request to get player information based on PUUID
     apiURL = routing[region.upper()]['platform'] + baseRiotAPI + baseSummonerURL + accountPUUID + "?" + apiKey
-    response = requests.get(apiURL)
+    response = call_with_retry(apiURL, 5, f'No search results for {gameName}#{tagLine}')
+    summonerProfile = response.json()
+    profileImgURL = ddragonBaseURL + 'img/profileicon/' + str(summonerProfile['profileIconId']) +'.png'
+    profile = {
+        'PUUID' : accountPUUID,
+        'name': gameName,
+        'tag': tagLine,
+        'region': region.upper(),
+        'level' : summonerProfile['summonerLevel'],
+        'icon': profileImgURL,
+        'updatedAT': summonerProfile['revisionDate']
+    }
 
-    if response.ok:
-        summonerProfile = response.json()
-        profileImgURL = ddragonBaseURL + 'img/profileicon/' + str(summonerProfile['profileIconId']) +'.png'
-        profile = {
-            'PUUID' : accountPUUID,
-            'name': gameName,
-            'tag': tagLine,
-            'region': region.upper(),
-            'level' : summonerProfile['summonerLevel'],
-            'icon': profileImgURL,
-            'updatedAT': datetime.datetime.now().timestamp()
-        }
+    #Send a request for player's ranked information
+    apiURL = routing[region.upper()]['platform'] + baseRiotAPI + baseLeagueRank + accountPUUID + "?" + apiKey
+    response = call_with_retry(apiURL, 5, f'No search results for {gameName}#{tagLine}')
+    rankData = response.json()
+    rankSolo = False
+    rankFlex = False
+    # Store the information
+    for league in rankData: 
+        if league['queueType'] == 'RANKED_SOLO_5x5':
+            profile['rankSoloTier'] = league['tier']
+            profile['rankSoloTierImg'] = 'http://127.0.0.1:5000/static/images/RankedEmblems/' + league['tier'].capitalize() + '.png'
+            profile['rankSoloRank'] = league['rank']
+            profile['rankSoloLP'] = league['leaguePoints']
+            profile['rankSoloWins'] = league['wins']
+            profile['rankSoloLosses'] = league['losses']
+            #Check if update is needed for ranked solo/duo information
+            rankSolo = True
+        elif league['queueType'] == 'RANKED_FLEX_SR':
+            profile['rankFlexTier'] = league['tier']
+            profile['rankFlexTierImg'] = 'http://127.0.0.1:5000/static/images/RankedEmblems/' + league['tier'].capitalize() + '.png'
+            profile['rankFlexRank'] = league['rank']
+            profile['rankFlexLP'] = league['leaguePoints']
+            profile['rankFlexWins'] = league['wins']
+            profile['rankFlexLosses'] = league['losses']
+            #Check if update is needed for ranked flex information
+            rankFlex = True
+
+    with sqlite3.connect('website.db') as connection:
+        connection.row_factory = sqlite3.Row
+        cursor = connection.cursor()
+        # Check if the PUUID already exists
+        cursor.execute("SELECT * FROM accounts WHERE PUUID = :PUUID AND region = :region ", profile)
+        rows = cursor.fetchone()
         
-        #Send a request for player's ranked information
-        apiURL = routing[region.upper()]['platform'] + baseRiotAPI + baseLeagueRank + accountPUUID + "?" + apiKey
-        response = requests.get(apiURL)
-        if not(response.ok):
-            return response.reason, response.status_code
+        # Insert/update the account to the accounts table 
+        if update or rows:
+            cursor.execute("""UPDATE accounts SET 
+                        PUUID = :PUUID, name = :name, 
+                        tag = :tag, region = :region, 
+                        level = :level, icon = :icon, 
+                        updatedAT = :updatedAT WHERE PUUID = :PUUID""",
+                        profile) 
 
-        rankData = response.json()
-        rankSolo = False
-        rankFlex = False
-        # Store the information
-        for league in rankData: 
-            if league['queueType'] == 'RANKED_SOLO_5x5':
-                profile['rankSoloTier'] = league['tier']
-                profile['rankSoloTierImg'] = 'http://127.0.0.1:5000/static/images/RankedEmblems/' + league['tier'].capitalize() + '.png'
-                profile['rankSoloRank'] = league['rank']
-                profile['rankSoloLP'] = league['leaguePoints']
-                profile['rankSoloWins'] = league['wins']
-                profile['rankSoloLosses'] = league['losses']
-                #Check if update is needed for ranked solo/duo information
-                rankSolo = True
-            elif league['queueType'] == 'RANKED_FLEX_SR':
-                profile['rankFlexTier'] = league['tier']
-                profile['rankFlexTierImg'] = 'http://127.0.0.1:5000/static/images/RankedEmblems/' + league['tier'].capitalize() + '.png'
-                profile['rankFlexRank'] = league['rank']
-                profile['rankFlexLP'] = league['leaguePoints']
-                profile['rankFlexWins'] = league['wins']
-                profile['rankFlexLosses'] = league['losses']
-                #Check if update is needed for ranked flex information
-                rankFlex = True
+        else: 
+            cursor.execute("""INSERT INTO accounts
+                            (PUUID, name, tag, region, level, icon, updatedAT) 
+                            VALUES (:PUUID, :name, :tag, :region, :level, :icon, :updatedAT)""", profile)
+        if rankSolo: 
+            cursor.execute("""UPDATE accounts SET 
+                        rankSoloTier = :rankSoloTier, rankSoloTierImg = :rankSoloTierImg, rankSoloRank = :rankSoloRank, 
+                        rankSoloLP = :rankSoloLP, rankSoloWins = :rankSoloWins, 
+                        rankSoloLosses = :rankSoloLosses 
+                        WHERE PUUID = :PUUID""",
+                        profile) 
+        if rankFlex: 
+            cursor.execute("""UPDATE accounts SET 
+                        rankFlexTier = :rankFlexTier, rankFlexTierImg = :rankFlexTierImg, rankFlexRank = :rankFlexRank, 
+                        rankFlexLP = :rankFlexLP, rankFlexWins = :rankFlexWins, 
+                        rankFlexLosses = :rankFlexLosses 
+                        WHERE PUUID = :PUUID""",
+                        profile) 
+    cursor.close()
+    connection.close()
+    return profile, response.status_code
 
-        with sqlite3.connect('website.db') as connection:
-            cursor = connection.cursor()
-            # Insert/update the account to the accounts table 
-            if update: 
-                cursor.execute("""UPDATE accounts SET 
-                            PUUID = :PUUID, name = :name, 
-                            tag = :tag, region = :region, 
-                            level = :level, icon = :icon, 
-                            updatedAT = :updatedAT WHERE PUUID = :PUUID""",
-                            profile) 
-
-            else: 
-                cursor.execute("""INSERT INTO accounts
-                               (PUUID, name, tag, region, level, icon, updatedAT) 
-                               VALUES (:PUUID, :name, :tag, :region, :level, :icon, :updatedAT)""", profile)
-            if rankSolo: 
-                cursor.execute("""UPDATE accounts SET 
-                            rankSoloTier = :rankSoloTier, rankSoloTierImg = :rankSoloTierImg, rankSoloRank = :rankSoloRank, 
-                            rankSoloLP = :rankSoloLP, rankSoloWins = :rankSoloWins, 
-                            rankSoloLosses = :rankSoloLosses 
-                            WHERE PUUID = :PUUID""",
-                            profile) 
-            if rankFlex: 
-                cursor.execute("""UPDATE accounts SET 
-                            rankFlexTier = :rankFlexTier, rankFlexTierImg = :rankFlexTierImg, rankFlexRank = :rankFlexRank, 
-                            rankFlexLP = :rankFlexLP, rankFlexWins = :rankFlexWins, 
-                            rankFlexLosses = :rankFlexLosses 
-                            WHERE PUUID = :PUUID""",
-                            profile) 
-        cursor.close()
-        connection.close()
-        return profile, response.status_code
-    if (response.status_code == 404):
-            return f'No search results for {gameName}#{tagLine}', response.status_code
-    return response.reason, response.status_code
 
 # Parameters - id : string,  start : int, count : int, region: string
 # Return - data : Dict or string, response_code : int
@@ -278,102 +294,115 @@ def matchList(region, id, start, count):
 
     # Request for match list based on the id
     # Returns [] if no match history
-    response = requests.get(apiURL)
+    response = call_with_retry(apiURL,5, 'No match history')
 
-    if response.ok:
-        # returns a List[String]
-        data = response.json()
+    # returns a List[String]
+    data = response.json()
+    
+    matchHistory = {}
+    matchHistory['empty'] = True
+
+    if len(data) > 0: 
+        matchHistory['empty'] = False
         
-        matchHistory = {}
-        matchHistory['empty'] = True
+    # Iterate through all match ids
+        for matchID in data:
+            # Check if the database if the match already exists 
+            with sqlite3.connect('website.db') as connection: 
+                cursor = connection.cursor()
+                cursor.execute("SELECT * FROM matches WHERE matchID = :matchID", {'matchID': matchID})
+                if cursor.fetchall():
+                    continue
+            cursor.close()
+            connection.close()
 
-        if len(data) > 0: 
-            matchHistory['empty'] = False
-            
-        # Iterate through all match ids
-            for matchID in data:
-                # Check if the database if the match already exists 
-                with sqlite3.connect('website.db') as connection: 
+            if 'match' in routing[region.upper()].keys():
+                apiMatchURL = routing[region.upper()]['match'] + baseRiotAPI + baseMatchURL + matchID + '?' + apiKey
+            else: 
+                apiMatchURL = routing[region.upper()]['region'] + baseRiotAPI + baseMatchURL + matchID + '?' + apiKey
+            # Using the match id for match details api endpoint
+            responseMatch = call_with_retry(apiMatchURL, 5, f'{matchID} not found')
+
+            matchData = responseMatch.json()
+            queueId = matchData['info']['queueId'] 
+            if queueId not in queueTypeWhiteList:
+                continue
+
+            queueType = getQueue(queueId)
+        
+            #find the participant # of the account
+            participantNumber = 0
+            for index, participant in enumerate(matchData['metadata']['participants'], start = 0):
+                if participant == id:
+                    participantNumber = index
+
+            # Getting match information
+            matchInfo = matchData['info']
+            gameEndTimestamp = matchInfo['gameEndTimestamp']
+            gameDurationM = matchInfo['gameDuration'] // 60
+            gameDurationS = matchInfo['gameDuration'] % 60
+            win = matchData['info']['participants'][participantNumber]['win']
+
+
+            profileData = {
+                'matchID' : matchID,
+                'mainParticipant': str(participantNumber),
+                'gameEndTimestamp': gameEndTimestamp,
+                'gameDurationM': gameDurationM,
+                'gameDurationS': gameDurationS,
+                'win' : win,
+                'queueType': queueType,
+                'highestDmg': 0,
+                'region': region.upper()
+                
+            }
+
+            with sqlite3.connect('website.db') as connection:
+                connection.execute("PRAGMA foreign_keys = ON") 
+                cursor = connection.cursor()
+                cursor.execute("INSERT INTO matches VALUES (:matchID, :gameDurationM, :gameDurationS, :gameEndTimestamp, :highestDmg, :queueType, :region)",profileData)
+            cursor.close()
+            connection.close()
+
+            highestDmg = 0
+            # Get match data for each participants
+            for i in range(10):
+                matchDetails = getMatchData(matchData, i)
+                participantData = {'participantID': f'{matchID}_{i}', 'matchID': matchID, 'region': region.upper(), 'participantNumber': i}
+                participantData.update(matchDetails)
+                with sqlite3.connect('website.db') as connection:
+                    connection.execute("PRAGMA foreign_keys = ON")
                     cursor = connection.cursor()
-                    cursor.execute("SELECT * FROM matches WHERE matchID = :matchID", {'matchID': matchID})
+                    cursor.execute("SELECT * FROM participants WHERE participantID = :participantID", {'participantID': participantData['participantID']})
+                    # Check if the participant in the participants table exist
                     if cursor.fetchall():
                         continue
-                if 'match' in routing[region.upper()].keys():
-                    apiMatchURL = routing[region.upper()]['match'] + baseRiotAPI + baseMatchURL + matchID + '?' + apiKey
-                else: 
-                    apiMatchURL = routing[region.upper()]['region'] + baseRiotAPI + baseMatchURL + matchID + '?' + apiKey
-                # Using the match id for match details api endpoint
-                responseMatch = requests.get(apiMatchURL)
-                if responseMatch.ok:
-                    matchData = responseMatch.json()
-                    queueId = matchData['info']['queueId'] 
-                    if queueId not in queueTypeWhiteList:
-                        continue
-
-                    queueType = getQueue(queueId)
+                    
+                    cursor.execute("""INSERT INTO participants VALUES (:participantID, :matchID, :region, :participantNumber, :participantName, 
+                        :particpantTag, :PUUID, :summonerSpell1ID, :summonerSpell2ID, :summonerSpell1URL, :summonerSpell2URL, 
+                        :summonerPrimaryRuneTypeURL, :summonerKeyStoneID, :summonerPrimaryPerk1ID, :summonerPrimaryPerk2ID, :summonerPrimaryPerk3ID, 
+                        :summonerKeyStoneURL, :summonerPrimaryPerk1URL, :summonerPrimaryPerk2URL, :summonerPrimaryPerk3URL, 
+                        :summonerSecondaryRuneTypeURL, :summonerSecondaryPerk1ID, :summonerSecondaryPerk2ID, :summonerSecondaryPerk1URL, :summonerSecondaryPerk2URL,
+                        :kills, :deaths, :assists, :kda, :cs, :totalWards, :visionWards, :wardsKilled, :visionScore, :totalDmgToChamps,
+                        :champion, :champLevel, :championPic, :championPicSplash, :item0, :item1, :item2, :item3, :item4, :item5, :item6, :win)""", participantData)
                 
-                    #find the participant # of the account
-                    participantNumber = 0
-                    for index, participant in enumerate(matchData['metadata']['participants'], start = 0):
-                        if participant == id:
-                            participantNumber = index
+                if matchDetails['totalDmgToChamps'] > highestDmg:
+                    highestDmg = matchDetails['totalDmgToChamps'] 
 
-                    # Getting match information
-                    matchInfo = matchData['info']
-                    gameEndTimestamp = matchInfo['gameEndTimestamp']
-                    gameDurationM = matchInfo['gameDuration'] // 60
-                    gameDurationS = matchInfo['gameDuration'] % 60
-                    win = matchData['info']['participants'][participantNumber]['win']
-    
+                cursor.close()
+                connection.close()
+            profileData['highestDmg'] = highestDmg
+            #insert the match to the matches table
+            with sqlite3.connect('website.db') as connection:
+                connection.execute("PRAGMA foreign_keys = ON") 
+                cursor = connection.cursor()
+                cursor.execute("UPDATE matches SET highestDmg = :highestDmg WHERE matchID = :matchID", profileData)
+            cursor.close()
+            connection.close()
 
-                    profileData = {
-                        'matchID' : matchID,
-                        'mainParticipant': str(participantNumber),
-                        'gameEndTimestamp': gameEndTimestamp,
-                        'gameDurationM': gameDurationM,
-                        'gameDurationS': gameDurationS,
-                        'win' : win,
-                        'queueType': queueType
-                    }
+    matchHistory['matches'] = data
+    return matchHistory, response.status_code
 
-                    highestDmg = 0
-
-                    # Get match data for each participants
-                    for i in range(10):
-                        matchDetails = getMatchData(matchData, i)
-                        participantData = {'participantID': f'{matchID}_{i}', 'matchID': matchID, 'region': region.upper(), 'participantNumber': i}
-                        participantData.update(matchDetails)
-                        with sqlite3.connect('website.db') as connection: 
-                            cursor = connection.cursor()
-                            cursor.execute("SELECT * FROM participants WHERE participantID = :participantID", {'participantID': participantData['participantID']})
-                            # Check if the participant in the participants table exist
-                            if cursor.fetchall():
-                                continue
-                            
-                            cursor.execute("""INSERT INTO participants VALUES (:participantID, :matchID, :region, :participantNumber, :participantName, 
-                                :particpantTag, :PUUID, :summonerSpell1ID, :summonerSpell2ID, :summonerSpell1URL, :summonerSpell2URL, 
-                                :summonerPrimaryRuneTypeURL, :summonerKeyStoneID, :summonerPrimaryPerk1ID, :summonerPrimaryPerk2ID, :summonerPrimaryPerk3ID, 
-                                :summonerKeyStoneURL, :summonerPrimaryPerk1URL, :summonerPrimaryPerk2URL, :summonerPrimaryPerk3URL, 
-                                :summonerSecondaryRuneTypeURL, :summonerSecondaryPerk1ID, :summonerSecondaryPerk2ID, :summonerSecondaryPerk1URL, :summonerSecondaryPerk2URL,
-                                :kills, :deaths, :assists, :kda, :cs, :totalWards, :visionWards, :wardsKilled, :visionScore, :totalDmgToChamps,
-                                :champion, :champLevel, :championPic, :championPicSplash, :item0, :item1, :item2, :item3, :item4, :item5, :item6, :win)""", participantData)
-                        if matchDetails['totalDmgToChamps'] > highestDmg:
-                            highestDmg = matchDetails['totalDmgToChamps'] 
-                        cursor.close()
-                        connection.close()
-                    profileData['highestDmg'] = highestDmg
-                    profileData['region'] = region.upper()
-                    #insert the match to the matches table
-                    with sqlite3.connect('website.db') as connection: 
-                        cursor = connection.cursor()
-                        cursor.execute("INSERT INTO matches VALUES (:matchID, :gameDurationM, :gameDurationS, :gameEndTimestamp, :highestDmg, :queueType, :region)",profileData)
-                    cursor.close()
-                    connection.close()
-                else:
-                    return responseMatch.reason, responseMatch.status_code
-        matchHistory['matches'] = data
-        return matchHistory, response.status_code
-    return response.reason, response.status_code
 
 # id : int
 # Get the queue type based on the id passed 
@@ -539,33 +568,31 @@ def getLeaderboards(region, type, start, end):
     if region.upper() not in routing.keys():
         return 'Region not found',404
     
-    if type == 'solo':
-        queueType = 'RANKED_SOLO_5x5'
-    else: 
+    if type == 'flex':
         queueType = 'RANKED_FLEX_SR'
+    else: 
+        queueType = 'RANKED_SOLO_5x5'
 
     apiURL = routing[region.upper()]['platform'] + baseRiotAPI + baseChallengerQueue + queueType + '?' + apiKey
-    response = requests.get(apiURL)
+    response = call_with_retry(apiURL, 5, f'{region.upper()} Ranked {queueType} Challenger Leaderboards not found')
     start = int(start)
     end = int(end)
     currPage = end/10
 
-    if response.ok:
-        data = response.json()
-        maxPages = math.ceil(len(data['entries']) / 10)
-        if currPage > maxPages:
-            return 'No data found', 404
-        leaderboard = {}
-        profiles, status_code = getLeaderboardsProfile(region.upper(), data,start,end, queueType)
-        if status_code != 200:
-            return profiles, status_code
 
-        leaderboard['profiles'] = profiles
-        leaderboard['tier'] = data['tier']
-        leaderboard['maxPages'] = maxPages
-        return leaderboard, response.status_code
-    
-    return response.reason, response.status_code
+    data = response.json()
+    maxPages = math.ceil(len(data['entries']) / 10)
+    if currPage > maxPages:
+        return 'No data found', 404
+    leaderboard = {}
+    profiles, status_code = getLeaderboardsProfile(region.upper(), data,start,end, queueType)
+    if status_code != 200:
+        return profiles, status_code
+
+    leaderboard['profiles'] = profiles
+    leaderboard['tier'] = data['tier']
+    leaderboard['maxPages'] = maxPages
+    return leaderboard, response.status_code
 
 # Parameters - data: dict, start: int, end: int, region: string
 # Get the account information
@@ -577,6 +604,8 @@ def getLeaderboardsProfile(region, data, start, end, queueType):
 
     profiles = {}
     # iterate through all the accounts
+    
+
     for index, user in enumerate(data['entries'][start:end], start = start+1):
         profile = {}
         profile['tier'] =  data['tier']
@@ -594,25 +623,48 @@ def getLeaderboardsProfile(region, data, start, end, queueType):
             cursor.execute("SELECT * FROM accounts where PUUID = :PUUID", {'PUUID': user['puuid']})
             # Check if the account exists on the database
             accountsFetch = cursor.fetchone()
+            
+            
+            summonerAPI = routing[region.upper()]['platform'] + baseRiotAPI + baseSummonerURL + user['puuid'] + "?" + apiKey
+            summonerData = call_with_retry(summonerAPI, 5, f"No search results for {user['puuid']}")
+            summonerProfile = summonerData.json()
+
+            # If puuid is in database, 
             if accountsFetch:
-                profile.update(dict(accountsFetch))
+                # check if the revision date matches 
+                if (summonerProfile['revisionDate'] == accountsFetch['updatedAT']):
+                    profile.update(dict(accountsFetch))
+                else: 
+                    #if not, update the database
+                    profileImgURL = ddragonBaseURL + 'img/profileicon/' + str(summonerProfile['profileIconId']) +'.png'
+                    profile.update({
+                    'level' : summonerProfile['summonerLevel'],
+                    'icon': profileImgURL,
+                    'updatedAT':summonerProfile['revisionDate']
+                    })
+                    accountAPI = routing[region.upper()]['region'] + baseRiotAPI + baseAccountRiotPUUID+ user['puuid'] + '?' + apiKey
+                    accountResponse= call_with_retry(accountAPI, 5, f"No search results for {user['puuid']}")
+                    accountData = accountResponse.json()
+                    profile['name'] = accountData['gameName']
+                    profile['tag'] = accountData['tagLine']
+
+                    cursor.execute("""UPDATE accounts SET 
+                                name = :name, tag = :tag, region = :region, 
+                                level = :level, icon = :icon, updatedAT = :updatedAT 
+                                WHERE PUUID = :PUUID""", profile)
+                    
+
             else:
-                #if not sent request for account data
-                summonerAPI = routing[region.upper()]['platform'] + baseRiotAPI + baseSummonerURL + user['puuid'] + "?" + apiKey
-                summonerData = requests.get(summonerAPI )
-                if not(summonerData.ok):
-                    return summonerData.reason , summonerData.status_code
-                summonerProfile = summonerData.json()
 
                 profileImgURL = ddragonBaseURL + 'img/profileicon/' + str(summonerProfile['profileIconId']) +'.png'
                 profile.update({
                     'level' : summonerProfile['summonerLevel'],
                     'icon': profileImgURL,
-                    'updatedAT': datetime.datetime.now().timestamp()
+                    'updatedAT': summonerProfile['revisionDate']
                 })
 
                 accountAPI = routing[region.upper()]['region'] + baseRiotAPI + baseAccountRiotPUUID+ user['puuid'] + '?' + apiKey
-                accountResponse= requests.get(accountAPI)
+                accountResponse = call_with_retry(accountAPI, 5, f"No search results for {user['puuid']}")
                 if not(accountResponse.ok):
                     return accountResponse.reason, accountResponse.status_code
                 accountData = accountResponse.json()
@@ -621,25 +673,26 @@ def getLeaderboardsProfile(region, data, start, end, queueType):
                 # Insert the account to the database
                 cursor.execute("INSERT INTO accounts(PUUID, name, tag, region, level, icon, updatedAT) VALUES (:PUUID, :name, :tag, :region, :level, :icon, :updatedAT)", profile)
 
-                if queueType == 'RANKED_SOLO_5x5':
-                    cursor.execute("""UPDATE accounts SET 
-                            rankSoloTier = :tier , rankSoloTierImg  = :tierImg,
-                            rankSoloRank = :rank, rankSoloLP = :lp, 
-                            rankSoloWins = :wins, rankSoloLosses = :losses 
-                            WHERE PUUID = :PUUID""",
-                            profile) 
-                else:
-                    cursor.execute("""UPDATE accounts SET 
-                            rankFlexTier = :tier , rankFlexTierImg = :tierImg,
-                            rankFlexRank = :rank, rankFlexLP = :lp, 
-                            rankFlexWins = :wins, rankFlexLosses = :losses
-                            WHERE PUUID = :PUUID""",
-                            profile) 
-
+            if queueType == 'RANKED_SOLO_5x5':
+                cursor.execute("""UPDATE accounts SET 
+                        rankSoloTier = :tier , rankSoloTierImg  = :tierImg,
+                        rankSoloRank = :rank, rankSoloLP = :lp, 
+                        rankSoloWins = :wins, rankSoloLosses = :losses 
+                        WHERE PUUID = :PUUID""",
+                        profile) 
+            else:
+                cursor.execute("""UPDATE accounts SET 
+                        rankFlexTier = :tier , rankFlexTierImg = :tierImg,
+                        rankFlexRank = :rank, rankFlexLP = :lp, 
+                        rankFlexWins = :wins, rankFlexLosses = :losses
+                        WHERE PUUID = :PUUID""",
+                        profile) 
+                        
         cursor.close()
         connection.close()
         profiles[f'{index}'] = profile
+        
     return profiles, 200
 
 
-            
+                

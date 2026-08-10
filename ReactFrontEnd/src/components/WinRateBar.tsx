@@ -1,4 +1,4 @@
-import '../css/WinRateBar.css'
+import './WinRateBar.css'
 
 interface WinRateBarProps{
     percentage: number;

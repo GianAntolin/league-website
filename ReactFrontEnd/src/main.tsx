@@ -1,32 +1,36 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
+import './index.css'
 
-import HomePage from './pages/HomePage.tsx'
+import AppLayout from './layouts/AppLayout.tsx'
+import Home from './pages/Home.tsx'
+import Account from './pages/Account.tsx'
+
+import ErrorPage from './pages/Error/ErrorPage.tsx'
 import Leaderboards from './pages/Leaderboards.tsx'
-import ErrorPage from './pages/ErrorPage.tsx'
-import AccountContent from './pages/AccountContent.tsx'
-import HomeContent from './pages/HomeContent.tsx'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
 
 
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <HomePage/>,
+    element: <AppLayout/>,
     errorElement: <ErrorPage message={"Something went wrong..."} sendHome= {true}/>,
     children: [
       {
         path: '',
-        element: <HomeContent/>
+        element: <Home/>
       },
       {
-        path: 'leaderboards',
+        path: '/leaderboards',
         element: <Leaderboards/>
       },
       {
         path: '/accounts/:region/:gameName/:tagLine',
-        element: <AccountContent/>
+        element: <Account/>
       }, 
       {
         path: '*',
@@ -37,9 +41,13 @@ const router = createBrowserRouter([
   }
 ]);
 
+const queryClient = new QueryClient()
+
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router = {router}/>
+    <QueryClientProvider  client ={queryClient}>
+      <RouterProvider router = {router}/>
+    </QueryClientProvider>
   </StrictMode>,
 )
