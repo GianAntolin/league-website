@@ -66,7 +66,7 @@ npm run dev
 
 ## GET /api/search
 
-Returns an array (max length of 3) of account name suggestions 
+Returns an list (max length of 3) of account name suggestions 
 
  **Query Parameters** 
  \-  name, region, and tag (optional)
@@ -76,22 +76,22 @@ Returns an array (max length of 3) of account name suggestions
 ```
 [
   {
-    "icon": string,
-    "name": string,
-    "region": string,
-    "tag": string
+    "icon": str,
+    "name": str,
+    "region": str,
+    "tag": str
   },
   {
-    "icon": string,
-    "name": string,
-    "region": string,
-    "tag": string
+    "icon": str,
+    "name": str,
+    "region": str,
+    "tag": str
   },
   {
-    "icon": string,
-    "name": string,
-    "region": string,
-    "tag": string
+    "icon": str,
+    "name": str,
+    "region": str,
+    "tag": str
   }
 ]
 ```
@@ -107,31 +107,31 @@ Returns account data
 
 ```
 {
-  "PUUID": string,
-  "icon": string,
+  "PUUID": str,
+  "icon": str,
   "level": int,
-  "name": string ,
-  "rankFlexLP": int | null,
-  "rankFlexLosses": int | null,
-  "rankFlexRank": int | null,
-  "rankFlexTier": string | null,
-  "rankFlexTierImg": string | null,
-  "rankFlexWins": string | null,
-  "rankSoloLP": int | null,
-  "rankSoloLosses": int | null,
-  "rankSoloRank": string | null,
-  "rankSoloTier": string | null,
-  "rankSoloTierImg": string | null,
-  "rankSoloWins": int | null,
-  "region": string,
-  "tag": string,
+  "name": str ,
+  "rankFlexLP": int | None,
+  "rankFlexLosses": int | None,
+  "rankFlexRank": int | None,
+  "rankFlexTier": str | None,
+  "rankFlexTierImg": str | None,
+  "rankFlexWins": str | None,
+  "rankSoloLP": int | None,
+  "rankSoloLosses": int | None,
+  "rankSoloRank": str | None,
+  "rankSoloTier": str | None,
+  "rankSoloTierImg": str | None,
+  "rankSoloWins": int | None,
+  "region": str,
+  "tag": str,
   "updatedAT": int
 }
 ```
 
 ## GET /api/matches
 
-Returns an object with match history statistics and an array of matches
+Returns an object with match history statistics and a list of matches
 
  **Query Parameters** 
  \-  puuid, region, start and count
@@ -152,7 +152,7 @@ Returns an object with match history statistics and an array of matches
 
 ## GET /api/leaderboards
 
-Returns an object with match history statistics and an array of matches
+Returns an object with match history statistics and a list of matches
 
  **Query Parameters** 
  \-  region, queue, start and end
