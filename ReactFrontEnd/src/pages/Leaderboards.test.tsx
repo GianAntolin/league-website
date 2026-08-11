@@ -617,7 +617,7 @@ describe('Leaderboards page', () => {
                         {} as any,
                         {},
                         {
-                            data: 'Error',
+                            data: {message: 'No data found'},
                             status: 400,
                             statusText: 'Bad Request',
                             headers: {},
@@ -716,7 +716,7 @@ describe('Leaderboards page', () => {
             </QueryClientProvider>
         )
 
-        expect(await screen.findByText('Error')).toBeInTheDocument();
+        expect(await screen.findByText('No data found')).toBeInTheDocument();
 
     })
 
