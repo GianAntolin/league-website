@@ -4,7 +4,7 @@ A league of legends platform that displays account statistics, match metrics, an
 
 ## Features
 
--  Real-time autocomplete account search
+- Real-time autocomplete account search
 - Account search with url navigation (e.g /accounts/na1/faker/tag)
 - Account statistics
 - Match History with match metrics
@@ -110,7 +110,7 @@ Returns account data
   "PUUID": str,
   "icon": str,
   "level": int,
-  "name": str ,
+  "name": str,
   "rankFlexLP": int | None,
   "rankFlexLosses": int | None,
   "rankFlexRank": int | None,
@@ -141,7 +141,7 @@ Returns an object with match history statistics and a list of matches
 ```
 { 
   "empty": boolean,
-  "matches": match[]
+  "matches": list[Match],
   "totalAssists": int,
   "totalDeaths": int,
   "totalGames": int,
@@ -162,7 +162,7 @@ Returns an object with match history statistics and a list of matches
 ```
 { 
   "maxPages": int,
-  "profiles": dict[int, dict]
+  "profiles": dict[int, dict],
   "tier": int
 }
 ```
