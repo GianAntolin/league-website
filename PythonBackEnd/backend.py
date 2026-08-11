@@ -185,7 +185,7 @@ def getSummoner(region, gameName, tagLine):
     
     #Send a request to get account information based on user's identification, RiotID
     if region.upper() not in routing.keys():
-        return 'Region not found',404
+        raise RiotNotFound('Region not found')
 
     apiURL = routing[region.upper()]['region'] + baseRiotAPI + baseAccountRiotIDURL + gameName + "/" + tagLine + "?" + apiKey
     response = call_with_retry(apiURL, 5, f'No search results for {gameName}#{tagLine}')
@@ -283,7 +283,7 @@ def getSummoner(region, gameName, tagLine):
 # Check the database if the match already stored if not, use match ids make an API call to get the match details
 def matchList(region, id, start, count):
     if region.upper() not in routing.keys():
-        return 'Region not found',404
+        raise RiotNotFound('Region not found')
 
     queryParams = '/ids?start=' + start + '&count=' + count + '&' + apiKey
 
@@ -566,7 +566,7 @@ def getMatchData(matchData, participantNumber):
 # If an account is not found in the database, store it
 def getLeaderboards(region, type, start, end):
     if region.upper() not in routing.keys():
-        return 'Region not found',404
+        raise RiotNotFound('Region not found')
     
     if type == 'flex':
         queueType = 'RANKED_FLEX_SR'
@@ -583,12 +583,9 @@ def getLeaderboards(region, type, start, end):
     data = response.json()
     maxPages = math.ceil(len(data['entries']) / 10)
     if currPage > maxPages:
-        return 'No data found', 404
+        raise RiotNotFound('No data found')
     leaderboard = {}
-    profiles, status_code = getLeaderboardsProfile(region.upper(), data,start,end, queueType)
-    if status_code != 200:
-        return profiles, status_code
-
+    profiles = getLeaderboardsProfile(region.upper(), data,start,end, queueType)
     leaderboard['profiles'] = profiles
     leaderboard['tier'] = data['tier']
     leaderboard['maxPages'] = maxPages
@@ -600,7 +597,7 @@ def getLeaderboards(region, type, start, end):
 # through API calls then store the account to the database
 def getLeaderboardsProfile(region, data, start, end, queueType):
     if region.upper() not in routing.keys():
-        return 'Region not found',404
+        raise RiotNotFound('Region not found')
 
     profiles = {}
     # iterate through all the accounts
@@ -665,8 +662,6 @@ def getLeaderboardsProfile(region, data, start, end, queueType):
 
                 accountAPI = routing[region.upper()]['region'] + baseRiotAPI + baseAccountRiotPUUID+ user['puuid'] + '?' + apiKey
                 accountResponse = call_with_retry(accountAPI, 5, f"No search results for {user['puuid']}")
-                if not(accountResponse.ok):
-                    return accountResponse.reason, accountResponse.status_code
                 accountData = accountResponse.json()
                 profile['name'] = accountData['gameName']
                 profile['tag'] = accountData['tagLine']
@@ -692,7 +687,7 @@ def getLeaderboardsProfile(region, data, start, end, queueType):
         connection.close()
         profiles[f'{index}'] = profile
         
-    return profiles, 200
+    return profiles
 
 
                 
