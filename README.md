@@ -122,7 +122,7 @@ Returns account data
   "rankSoloRank": string | null,
   "rankSoloTier": string | null,
   "rankSoloTierImg": string | null,
-  "rankSoloWins": int | nul,
+  "rankSoloWins": int | null,
   "region": string,
   "tag": string,
   "updatedAT": int
