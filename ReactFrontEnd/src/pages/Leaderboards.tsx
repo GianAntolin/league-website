@@ -44,13 +44,16 @@ function Leaderboards() {
   const region = params.get('region') ?? 'na1';
   const queue = params.get('queue') ?? 'solo'
   const tempPage = params.get('page') ?? '1'
-  const page = tempPage.trim().match(pattern) ? tempPage : '1'
+  const page = tempPage.trim().match(pattern) ? parseInt(tempPage) >= 1 ? tempPage : '1' : '1'
 
 
   const { data, isLoading , isError, error } = useGetLeaderboards({ region, page, queue })
 
+  // Assumes: page >= 1, page <= data.maxPages,  data.maxPages > 1
+  const rangeLoop = (curr: number, maximum: number) => {
+    const start = (Math.floor((curr-1)/10) * 10) + 1
+    const end = Math.min(start + 9, maximum)
 
-  const rangeLoop = (start: number, end: number) => {
     return Array.from({ length: end - start + 1 }, (_, index) => start + index)
   }
 
@@ -97,35 +100,7 @@ function Leaderboards() {
     if (data === undefined) return setPageButtons([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
     const currPage = parseInt(page);
 
-    if (data.maxPages > 10) {
-      if (currPage > pageButtons[9]) {
-        // Prevent buttons from going over the maxPages
-        if (currPage < data.maxPages) {
-          // Check if there's enough pages for 10 buttons
-          if ((Math.floor(currPage / 10) + 1) * 10 < data.maxPages) {
-            setPageButtons(rangeLoop((Math.floor(currPage / 10) * 10) + 1, (Math.floor(currPage / 10) + 1) * 10))
-          } else {
-            setPageButtons(rangeLoop((Math.floor(currPage / 10) * 10) + 1, data.maxPages))
-          }
-        }
-      }
-
-      if (currPage < pageButtons[0]) {
-        if (currPage < 1) {
-          setPageButtons(rangeLoop(1, data.maxPages))
-        } else {
-          const temp = (Math.floor(currPage / 10) - 1) * 10
-          const start = temp === 0 ? 1 : temp
-          setPageButtons(rangeLoop(start, Math.floor(currPage / 10) * 10))
-
-        }
-      }
-
-    } else {
-      setPageButtons(rangeLoop(1,data.maxPages))
-    }
-
-
+    setPageButtons(rangeLoop(currPage, data.maxPages))
 
   }, [data])
 
@@ -133,10 +108,6 @@ function Leaderboards() {
   useEffect(() => {
     document.title = 'Leaderboards'
   }, [])
-
-  if (isError){
-    console.log(error)
-  }
 
 
   return (
@@ -149,20 +120,20 @@ function Leaderboards() {
         </div>
         <div className='leadersboards-subheading1'>
           <div className="leaderboards-section1">
-            <button
+            <button data-testid = 'leaderboards-regions-drop-down-button'
               onClick={() => setToggleOptions(!toggleOptions)}
             >
               {selected === null ? regions[0].label : regions[regionTags.indexOf(selected.toLocaleUpperCase())].label}
             </button>
             {toggleOptions &&
-              <div className='leaderboards-drop-down'>
+              <div className='leaderboards-drop-down' data-testid = 'leaderboards-drop-down'>
                 <DropDown options={regions} handleSelected={handleRegionButton}></DropDown>
               </div>
             }
 
           </div>
           <div className='leadersboards-subheading1-div1'>
-            <button
+            <button data-testid = 'leaderboards-ranked-solo-button'
               style={{ backgroundColor: (queueType === 'solo' || queueType === null || queue === 'solo') ? '#070765' : '' }}
               onClick={() => handleQueueButton('solo')}>
               <span className='solo'>
@@ -171,7 +142,7 @@ function Leaderboards() {
             </button>
           </div>
           <div className='leadersboards-subheading1-div2'>
-            <button
+            <button data-testid = 'leaderboards-ranked-flex-button'
               style={{ backgroundColor: queue === 'flex' || queueType === 'flex' ? '#070765' : '' }}
               onClick={() => handleQueueButton('flex')}>
               <span className='flex'>

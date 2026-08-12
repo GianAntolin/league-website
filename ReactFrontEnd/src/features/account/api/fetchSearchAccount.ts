@@ -10,7 +10,8 @@ type SearchAccountFilters = {
 export function useGetSearchAccount<T>(filters: SearchAccountFilters) {
     return useQuery<T, AxiosError<APIErrorResponse>>({
         queryKey: ['/search', filters],
-        queryFn: () => fetchSearchAccount(filters)
+        queryFn: () => fetchSearchAccount(filters),
+        retry: false
     })
 }
 

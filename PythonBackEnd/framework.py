@@ -61,7 +61,7 @@ def timeElapsed(time2):
 def required_params(params):
     for (param, value )in params: 
         if (not value):
-            return True, f'Missing {param}'
+            return True, {'message': f'Missing {param}'}
     return False, None
 
 #Get account suggestions based on user input
