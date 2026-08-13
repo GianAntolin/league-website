@@ -76,7 +76,7 @@ def searchAccount():
     ]
     isError, error = required_params(params)
     if isError: 
-        return jsonify(error), 400
+        return jsonify(error), 404
     
 
     tag = request.args.get('tag', '').strip()

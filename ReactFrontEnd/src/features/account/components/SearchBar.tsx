@@ -2,7 +2,7 @@ import { FormEvent, useState } from "react";
 import { useNavigate, NavLink } from 'react-router-dom';
 import './SearchBar.css';
 import DropDown from "@/components/DropDown";
-import { regions, regionTags} from "@/shared/regions";
+import { regions, regionTags } from "@/shared/regions";
 import { useGetSearchAccount } from "../api/fetchSearchAccount";
 
 
@@ -31,7 +31,7 @@ function SearchBar() {
     const [toggleOptions, setToggleOptions] = useState(false);
     // Regular Expression for gameName#tag
     const pattern = /[\s]*[\w\s]+#[\s]*[\w]+[\s]*/g;
-    const { data } = useGetSearchAccount<SearchSuggestions>({region: selected, name: accountIdentifier})
+    const { data } = useGetSearchAccount<SearchSuggestions>({ region: selected, name: accountIdentifier })
 
     const handleSelected = (value: any) => {
         setSelected(value);
@@ -90,7 +90,7 @@ function SearchBar() {
                     </div>
                     <form className='form-search' onSubmit={handleSubmit}>
                         <div className='search'>
-                            <input
+                            <input data-testid='search-bar-form'
                                 className='search-bar'
                                 type='search'
                                 value={accountIdentifier}
@@ -134,7 +134,7 @@ function SearchBar() {
                             <ul>
                                 {data.map(user => (
                                     <NavLink key={`${user.name}#${user.tag}`} to={`/accounts/${user.region}/${user.name}/${user.tag}`}>
-                                        <li>
+                                        <li data-testid='search-bar-suggestions'>
                                             <img src={user.icon} />
                                             <span className='search-bar-suggestions-name'>
                                                 {user.name}&nbsp;

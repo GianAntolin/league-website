@@ -75,6 +75,7 @@
     background-color: transparent;
     border-style: none;
     border-radius: .25rem;
+    z-index: 2;
 }
 
 .leadersboards-subheading1 button:hover{
