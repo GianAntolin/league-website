@@ -45,7 +45,6 @@ describe('search bar', () => {
         vi.spyOn(axios, 'get').mockImplementation(async (url, config) => {
             if (config?.params) {
                 const queryParams = buildParams(config.params as Record<string, unknown>)
-                console.log('@axios ', queryParams)
                 if (queryParams in accountSearchMockResponse) {
                     return Promise.resolve(accountSearchMockResponse[queryParams])
                 } else {

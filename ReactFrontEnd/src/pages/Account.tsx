@@ -28,25 +28,25 @@ function Account() {
 
   return (
     <BackgroundImgContextProvider>
-      <div className='account'>
+      <div className='account' data-testid='account'>
         {data && !isError &&
           <div className='account-content'>
-            <div className='account-content-section-1-header'>
+            <div className='account-content-section-1-header' data-testid='account-content-section-1-header'>
               <AccountHeader summoner={data} />
             </div>
             <div className='account-content-section-2'>
               <div className='account-content-section-2-ranks'>
-                <div className='account-content-section-2-ranks-solo' style={{ height: data.rankSoloTier === 'UNRANKED' ? '50px' : '100px' }}>
+                <div data-testid='account-content-section-2-ranks-solo' className='account-content-section-2-ranks-solo' style={{ height: data.rankSoloTier === 'UNRANKED' ? '50px' : '100px' }}>
                   <RankSummary tier={data.rankSoloTier} rank={data.rankSoloRank} lp={data.rankSoloLP}
                     wins={data.rankSoloWins} losses={data.rankSoloLosses} queueType={'Ranked Solo'} tierImg={data.rankSoloTierImg} />
                 </div>
-                <div className='account-content-section-2-ranks-flex' style={{ height: data.rankFlexTier === 'UNRANKED' ? '50px' : '100px' }}>
+                <div data-testid='account-content-section-2-ranks-flex' className='account-content-section-2-ranks-flex' style={{ height: data.rankFlexTier === 'UNRANKED' ? '50px' : '100px' }}>
                   <RankSummary tier={data.rankFlexTier} rank={data.rankFlexRank} lp={data.rankFlexLP}
                     wins={data.rankFlexWins} losses={data.rankFlexLosses} queueType={'Ranked Flex'} tierImg={data.rankFlexTierImg} />
                 </div>
 
               </div>
-              <div className='account-content-section-2-match-history'>
+              <div  className='account-content-section-2-match-history'>
                 <MatchHistory id={data['PUUID']} region={data['region']} />
               </div>
 

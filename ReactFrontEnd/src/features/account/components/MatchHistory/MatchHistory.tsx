@@ -68,86 +68,88 @@ function MatchHistory({ id, region }: MatchHistoryProps) {
 
   }, [id, region]);
 
-// if memoData is different, appending the memoData to the matchlist and update states accordingly
-useEffect(() => {
-  if (data === undefined) return
-  setMatchList(prev => ({ ...prev, ...data.matches }));
-  setTotalKills(prev => prev + data.totalKills);
-  setTotalDeaths(prev => prev + data.totalDeaths);
-  setTotalAssists(prev => prev + data.totalAssists);
+  // if memoData is different, appending the memoData to the matchlist and update states accordingly
+  useEffect(() => {
+    if (data === undefined) return
+    setMatchList(prev => ({ ...prev, ...data.matches }));
+    setTotalKills(prev => prev + data.totalKills);
+    setTotalDeaths(prev => prev + data.totalDeaths);
+    setTotalAssists(prev => prev + data.totalAssists);
 
-  setWins(prev => prev + data.totalWins);
-  setGames(prev => prev + data.totalGames);
+    setWins(prev => prev + data.totalWins);
+    setGames(prev => prev + data.totalGames);
 
-}, [data]);
+  }, [data]);
 
-// change the win rate based on the games and wins 
-useEffect(() => {
-  if (games > 0) {
-    return setWinRate(wins / games);
-  }
-}, [games, wins])
+  // change the win rate based on the games and wins 
+  useEffect(() => {
+    if (games > 0) {
+      return setWinRate(wins / games);
+    }
+  }, [games, wins])
 
-if (isError) return <ErrorPage message={`${error.response?.data?.message}`} sendHome={false}></ErrorPage>
+  if (isError) return <ErrorPage message={`${error.response?.data?.message}`} sendHome={false}></ErrorPage>
 
-if (isLoading){
-  
-  return (    
-    <div className='pending-match-history'>
+  if (isLoading) {
+
+    return (
+      <div className='pending-match-history'>
         <div className="spinner-border text-secondary" role="status">
           <span className="visually-hidden">Loading...</span>
         </div>
 
       </div>
-  )
-}
+    )
+  }
 
 
-return (
-  <div className="match">
-    {data && games > 0 &&
-      <div className='match-history-container'>
-        <span className="match-history-header">
-          Match History
-        </span>
-        <div className='match-history-stats'>
-          <div className="match-history-stats-content">
-            <div className="match-history-section-1">
-              <WinRateArc percentage={winRate} size={80} strokeWidth={7.5} fontSize={12} wins={wins} loses={games - wins} />
-            </div>
-            <div className='match-history-section-2'>
-              <KDA k={(totalKills / games).toFixed(1)} d={(totalDeaths / games).toFixed(1)} a={(totalAssists / games).toFixed(1)} size={'14px'}></KDA>
-              <div className='KDA'>
-                <strong className="match-history-section2-KDA">
-                  {((totalKills + totalAssists) / totalDeaths).toFixed(2)}
-                </strong>
-                <span className='match-history-section2-kda-letters'>
-                  KDA
-                </span>
+  return (
+    <div className="match">
+      {data && games > 0 &&
+        <div className='match-history-container' data-testid='match-history-container'>
+          <span className="match-history-header">
+            Match History
+          </span>
+          <div className='match-history-stats'>
+            <div className="match-history-stats-content" data-testid="match-history-stats-content">
+              <div className="match-history-section-1">
+                <WinRateArc percentage={winRate} size={80} strokeWidth={7.5} fontSize={12} wins={wins} loses={games - wins} />
+              </div>
+              <div className='match-history-section-2'>
+                <KDA k={(totalKills / games).toFixed(1)} d={(totalDeaths / games).toFixed(1)} a={(totalAssists / games).toFixed(1)} size={'14px'}></KDA>
+                <div className='KDA'>
+                  <strong className="match-history-section2-KDA">
+                    {((totalKills + totalAssists) / totalDeaths).toFixed(2)}
+                  </strong>
+                  <span className='match-history-section2-kda-letters'>
+                    KDA
+                  </span>
+                </div>
+              </div>
+              <div className='match-history-section-3'>
+                <RecentGames PUUID={id} region={region} matches={matchList} />
               </div>
             </div>
-            <div className='match-history-section-3'>
-              <RecentGames PUUID={id} region={region} matches={matchList} />
-            </div>
           </div>
-        </div>
-        <div className='match-list'>
-          <MatchList matches={matchList} region={region}>
-          </MatchList>
-        </div>
+          <div className='match-list'>
+            <MatchList matches={matchList} region={region}>
+            </MatchList>
+          </div>
+        </div>}
+      {data && games <= 0 && <NoRecentMatches></NoRecentMatches>}
+      {data && !data.empty && <div>
+        <button 
+          data-testid='match-history-show-more-button'
+          type="button"
+          className='show-more-button'
+          onClick={handleClick}
+          disabled={isPlaceholderData}>
+          {isPlaceholderData ? <div className="spinner-border text-secondary" role="status" /> : <span> Show more</span>}
+        </button>
       </div>}
-    {data && games <= 0 && <NoRecentMatches></NoRecentMatches>}
-    {data && !data.empty && <div>
-      <button type="button"
-        className='show-more-button'
-        onClick={handleClick}
-        disabled={isPlaceholderData}>
-        {isPlaceholderData ? <div className="spinner-border text-secondary" role="status" /> : <span> Show more</span>}
-      </button>
-    </div>}
 
-  </div>
-)
+    </div>
+  )
 }
 
 export default MatchHistory;

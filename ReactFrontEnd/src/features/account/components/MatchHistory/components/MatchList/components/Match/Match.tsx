@@ -61,7 +61,7 @@ function Match({data, region}: MatchProps) {
     };
 
     return (
-        <div className='match-top-level'>
+        <div className='match-top-level' data-testid = 'match-top-level'>
             <div className='match-details' style = {{background: backgroundColor}}>
                 <div className='date-outcome-container'>
                     <div className ='queue-date'>
@@ -148,7 +148,7 @@ function Match({data, region}: MatchProps) {
                     </div>
 
                     <div className='match-display-section2'>
-                        <div className= "team-list-overall">
+                        <div className= "team-list-overall" data-testid='team-list'>
                             <div className= 'team-list'>
                                 {
                                     Object.values(data.participants).slice(0,5).map( (participant) => (

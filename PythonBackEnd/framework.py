@@ -222,20 +222,14 @@ def account():
         except RiotUnauthorized as error: 
             return jsonify({ 'message' : error.message}), 500
         except RiotRateLimit as error:
-            return jsonify({ 'message': 'Failed to fetch data from riot', }), 502
+            return jsonify({ 'message': 'Failed to fetch data from riot'}), 502
         except RiotNotFound as error: 
             return jsonify({ 'message': error.message}), 404
         except Exception as error: 
             return jsonify({ 'message': str(error)}),  500
         
         status_code = response[1]
-        # check if the account was inserted/updated
-        if status_code == 200:
-            # Get the account information from the database
-            cursor.execute("SELECT * FROM accounts WHERE PUUID = :PUUID", {'PUUID': response[0]['PUUID']})
-            data = dict(cursor.fetchone())
-        else:
-            data = response[0]
+        data = response[0]
     cursor.close()
     connection.close()
     return jsonify(data), status_code
@@ -267,7 +261,7 @@ def matchList():
         except RiotUnauthorized as error: 
             return jsonify({ 'message' : error.message}), 500
         except RiotRateLimit as error:
-            return jsonify({ 'message': 'Failed to fetch data from riot', }), 502
+            return jsonify({ 'message': 'Failed to fetch data from riot'}), 502
         except RiotNotFound as error: 
             return jsonify({ 'message': error.message}), 404
         except Exception as error: 
@@ -367,7 +361,7 @@ def leaderboards():
     except RiotUnauthorized as error: 
         return jsonify({ 'message' : error.message}), 500
     except RiotRateLimit as error:
-        return jsonify({ 'message': 'Failed to fetch data from riot', }), 502
+        return jsonify({ 'message': 'Failed to fetch data from riot'}), 502
     except RiotNotFound as error: 
         return jsonify({ 'message': error.message}), 404
     except Exception as error: 

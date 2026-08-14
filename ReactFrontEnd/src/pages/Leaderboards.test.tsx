@@ -19,7 +19,6 @@ interface LeaderBoardsWrapperProps {
 }
 
 function LeaderboardsWrapper({ path }: LeaderBoardsWrapperProps) {
-    console.log('wrapper: ', path)
     return (
         <MemoryRouter initialEntries={path}>
             <Routes>
@@ -38,7 +37,6 @@ describe('Leaderboards page', () => {
         vi.spyOn(axios, 'get').mockImplementation(async (url, config) => {
             if (config?.params) {
                 const queryParams = buildParams(config.params as Record<string, unknown>)
-                console.log(queryParams)
                 if (queryParams in leaderBoardsMockResponse) {
                     return Promise.resolve(leaderBoardsMockResponse[queryParams])
                 }

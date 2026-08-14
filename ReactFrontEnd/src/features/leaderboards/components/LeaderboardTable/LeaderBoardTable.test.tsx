@@ -331,12 +331,10 @@ describe('LeaderboardBoardTable feauture', () => {
             ).toBeInTheDocument()
 
             await user.click(button)
-            console.log(`pressing button ${button.textContent}`)
             expect(
 
                 screen.getByTestId('location')
             ).toHaveTextContent(`?page=${i}`)
-            console.log(screen.getByTestId('location').textContent)
         }
 
 
@@ -354,11 +352,9 @@ describe('LeaderboardBoardTable feauture', () => {
 
         let location = screen.getByTestId('location')
 
-        console.log('Click 5')
-        console.log(location.textContent)
 
 
-        expect( 
+        expect(
             button
         ).toHaveTextContent('5')
 
@@ -368,40 +364,33 @@ describe('LeaderboardBoardTable feauture', () => {
                 <GetParams />
             </MemoryRouter>
         )
-        
+
         expect(
             screen.getByRole('button', { name: 'Prev' })
         ).toBeInTheDocument()
 
         let buttonPrev = screen.getByRole('button', { name: 'Prev' })
-        await user.click(buttonPrev)        
-        console.log('Click Prev')
+        await user.click(buttonPrev)
 
         expect(
             location
         ).toHaveTextContent('?page=4')
 
-        console.log(location.textContent)
 
         rerender(
             <MemoryRouter initialEntries={[`/leaderboards${location.textContent}`]}>
-                <LeaderboardTable data={data}  page={location.textContent!.replace(/[^0-9]/g, '')} pageButtons={pageButtons} />
+                <LeaderboardTable data={data} page={location.textContent!.replace(/[^0-9]/g, '')} pageButtons={pageButtons} />
                 <GetParams />
             </MemoryRouter>
         )
 
-        let buttonNext = screen.getByRole('button', {name: 'Next'})
+        let buttonNext = screen.getByRole('button', { name: 'Next' })
         await user.click(buttonNext)
-        console.log('Click Next')
 
-        expect( 
+        expect(
             location
         ).toHaveTextContent('?page=5')
 
-        console.log(location.textContent)
-
-
-        console.log('Going to the max page => no next button')
         cleanup()
         render(
             <MemoryRouter initialEntries={[`/leaderboards?page=${data.maxPages}`]}>
@@ -410,10 +399,8 @@ describe('LeaderboardBoardTable feauture', () => {
             </MemoryRouter>
         )
 
-        console.log(screen.getByTestId('location').textContent)
-
-        expect( 
-            screen.queryByRole('button', {name: 'next'})
+        expect(
+            screen.queryByRole('button', { name: 'next' })
         ).not.toBeInTheDocument()
 
     })
