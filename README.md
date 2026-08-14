@@ -19,9 +19,11 @@ A league of legends platform that displays account statistics, match metrics, an
 - Vite
 - React Router
 - React Query
+- Vitest
 ### Backend
 
 - Python
+- Flask
 - Sqlite3
 
 ## Backend Setup
