@@ -1,5 +1,5 @@
 import { APIErrorResponse } from "@/shared/type";
-import { useQuery } from "@tanstack/react-query"
+import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import axios, { AxiosError } from "axios"
 
 type SearchAccountFilters = {
@@ -11,7 +11,8 @@ export function useGetSearchAccount<T>(filters: SearchAccountFilters) {
     return useQuery<T, AxiosError<APIErrorResponse>>({
         queryKey: ['/search', filters],
         queryFn: () => fetchSearchAccount(filters),
-        retry: false
+        placeholderData: keepPreviousData,
+        retry: false,
     })
 }
 

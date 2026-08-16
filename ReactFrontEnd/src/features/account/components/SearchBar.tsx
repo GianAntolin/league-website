@@ -28,6 +28,7 @@ function SearchBar() {
     const [accountIdentifier, setaccountIdentifier] = useState('');
     const navigate = useNavigate();
     const [selected, setSelected] = useState(regions[0].value);
+    const [showSuggestions, setShowSuggestions] = useState(false)
     const [toggleOptions, setToggleOptions] = useState(false);
     // Regular Expression for gameName#tag
     const pattern = /[\s]*[\w\s]+#[\s]*[\w]+[\s]*/g;
@@ -41,11 +42,14 @@ function SearchBar() {
     // When the input changes, set the accountIdentifier to new value and make an API call to get account suggestions
     const handleOnChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         setaccountIdentifier(event.target.value)
+        setToggleOptions(false)
+        setShowSuggestions(true)
     }
 
     // Handles the submit and navigates to a url based on the input
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
+        setShowSuggestions(false)
         let inputString = accountIdentifier;
         // match to 'gameName#tag' pattern
         let found = inputString.match(pattern);
@@ -83,7 +87,11 @@ function SearchBar() {
                     }}>
                     <div className="search-bar-section1">
                         <button
-                            onClick={() => setToggleOptions(!toggleOptions)}
+                            onClick={() => {
+                                setToggleOptions(!toggleOptions)
+                                setShowSuggestions(false)
+                            }
+                        }
                         >
                             {regions[regionTags.indexOf(selected.toLocaleUpperCase())].label}
                         </button>
@@ -96,6 +104,7 @@ function SearchBar() {
                                 value={accountIdentifier}
                                 placeholder={`Game Name + #${selected}`}
                                 onChange={handleOnChange}
+                                onClick = {() => setToggleOptions(false)}
                             >
                             </input>
                             <button
@@ -124,7 +133,7 @@ function SearchBar() {
                 </div>
             }
 
-            {!toggleOptions && data &&
+            {showSuggestions && data &&
                 <div className='search-bar-drop-down'>
                     <div className="search-bar-drop-down-top">
                         <div className="search-bar-drop-down-header">
@@ -133,7 +142,7 @@ function SearchBar() {
                         <div className="search-bar-suggestions">
                             <ul>
                                 {data.map(user => (
-                                    <NavLink key={`${user.name}#${user.tag}`} to={`/accounts/${user.region}/${user.name}/${user.tag}`}>
+                                    <NavLink onClick = {() => setShowSuggestions(false)} key={`${user.name}#${user.tag}`} to={`/accounts/${user.region}/${user.name}/${user.tag}`}>
                                         <li data-testid='search-bar-suggestions'>
                                             <img src={user.icon} />
                                             <span className='search-bar-suggestions-name'>

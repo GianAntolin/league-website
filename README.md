@@ -2,6 +2,8 @@
 
 A league of legends platform that displays account statistics, match metrics, and region rankings. 
 
+![Demo](./assets/Account_Search_GitHub.gif)
+
 ## Features
 
 - Real-time autocomplete account search
