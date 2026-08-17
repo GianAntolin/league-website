@@ -16,9 +16,9 @@ function AccountHeader({summoner} : AccountContentProps) {
 
   return (
     <div className = 'account-header' 
-        style={{backgroundImage: `linear-gradient(to right,#070720, 20%, rgba(240, 240, 240, 0), 80%, #070720),
+        style={{backgroundImage: profileBackgroundImg ? `linear-gradient(to right,#070720, 20%, rgba(240, 240, 240, 0), 80%, #070720),
                                   linear-gradient(to top,#070720, 25%, rgba(240, 240, 240, 0), 90%, #070720),
-                                  url(${profileBackgroundImg})`}}>
+                                  url(${profileBackgroundImg})` : ''}}>
 
       <div className = 'account-header-icon-container'>
         <div className="account-header-icon-name-tag">
