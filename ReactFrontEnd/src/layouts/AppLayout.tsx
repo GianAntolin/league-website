@@ -29,7 +29,7 @@ function AppLayout() {
                 <SearchBar />
             </header>
 
-            <div className="content">
+            <div className="content" data-testid="content">
                 <Outlet />
             </div>
         </>

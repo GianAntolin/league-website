@@ -224,7 +224,7 @@ describe('account page', () => {
             expect(axios.get).toHaveBeenCalledWith('http://127.0.0.1:5000/api/accounts', { params: { region: 'NA1', name: 'error', tag: 'here' } })
         })
         
-        expect(await screen.findByTestId('account')).toHaveTextContent('HTTP 404: No search results for error#here')
+        expect(await screen.findByTestId('content')).toHaveTextContent('HTTP 404: No search results for error#here')
 
     })
 
