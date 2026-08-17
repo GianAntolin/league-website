@@ -9,18 +9,14 @@
     --defeat: #59343b;
     --gray: rgba(184, 198, 219,1);
   
-    font-family: Inter,sans-serif;
-    height:100%;
-    width:100%;
-
-  
+    font-family: Inter,sans-serif;  
   }
+
+
   
 
 html, body, #root, #root>div{
-    height:100%;
-    width: 100%;
-    min-width: 240px;
+    min-width: 300px;
     margin:0;
     padding:0;
     background-color: var(--background-color);

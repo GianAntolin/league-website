@@ -26,6 +26,24 @@ function Account() {
     document.title = `${gameName}#${tagLine}`
   }, [region, gameName, tagLine])
 
+  if (isLoading) {
+    return (
+      <div className='pending'>
+        <div className="spinner-border text-secondary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    )
+  }
+
+  if (isError) {
+    return (
+      <div className='account-error'>
+        <ErrorPage message={`HTTP ${error.status}: ${error.response?.data?.message}`} sendHome={false} />
+      </div>
+    )
+  }
+
   return (
     <BackgroundImgContextProvider>
       <div className='account' data-testid='account'>
@@ -46,7 +64,7 @@ function Account() {
                 </div>
 
               </div>
-              <div  className='account-content-section-2-match-history'>
+              <div className='account-content-section-2-match-history'>
                 <MatchHistory id={data['PUUID']} region={data['region']} />
               </div>
 
@@ -54,7 +72,6 @@ function Account() {
           </div>
 
         }
-        {isError && !isLoading && <ErrorPage message={`HTTP ${error.status}: ${error.response?.data?.message}`} sendHome={false} />}
       </div>
 
     </BackgroundImgContextProvider>

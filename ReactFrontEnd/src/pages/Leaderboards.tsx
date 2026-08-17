@@ -153,7 +153,7 @@ function Leaderboards() {
         </div>
       </div>
       {!data && isLoading &&
-        <div className='pending'>
+        <div className='leaderboards-pending'>
           <div className="spinner-border text-secondary" role="status">
             <span className="visually-hidden">Loading...</span>
           </div>

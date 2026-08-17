@@ -88,8 +88,11 @@ function MatchHistory({ id, region }: MatchHistoryProps) {
     }
   }, [games, wins])
 
-  if (isError) return <ErrorPage message={`${error.response?.data?.message}`} sendHome={false}></ErrorPage>
-
+  if (isError) return (
+    <div className='match-history-error'>
+      <ErrorPage message={`${error.response?.data?.message}`} sendHome={false}></ErrorPage>
+    </div>
+  )
   if (isLoading) {
 
     return (
@@ -101,6 +104,12 @@ function MatchHistory({ id, region }: MatchHistoryProps) {
       </div>
     )
   }
+
+  if (data && games <= 0) return (
+    <div className='match-history-no-recent-matches'>
+      <NoRecentMatches></NoRecentMatches>
+    </div>
+  )
 
 
   return (
@@ -136,9 +145,8 @@ function MatchHistory({ id, region }: MatchHistoryProps) {
             </MatchList>
           </div>
         </div>}
-      {data && games <= 0 && <NoRecentMatches></NoRecentMatches>}
       {data && !data.empty && <div>
-        <button 
+        <button
           data-testid='match-history-show-more-button'
           type="button"
           className='show-more-button'

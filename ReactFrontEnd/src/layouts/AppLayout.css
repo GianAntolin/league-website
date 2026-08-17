@@ -1,6 +1,9 @@
+
+
 .content{
   width: 100%;
   background-color: var(--background-color);
+  min-height: 100vh;
 }
 
 header {
@@ -42,6 +45,7 @@ header {
   font-weight: 700;
   padding: 0;
 }
+
 
 
 @media (max-width: 800px) {

@@ -6,6 +6,8 @@
     background-repeat: no-repeat;   
     max-width: 1062px;
     background-position: center;
+    background-color: var(--profile-card-color);
+
 
 }
 
